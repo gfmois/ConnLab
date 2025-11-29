@@ -7,6 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class LabTCPController implements Initializable {
+    private static final Logger logger = LogManager.getLogger(LabTCPController.class);
     private final List<String> configurations = new ArrayList<>();
     private String selectedConfiguration;
 
@@ -37,6 +40,7 @@ public class LabTCPController implements Initializable {
             if (value == null || value.isEmpty()) {
                 configurationsListView.getItems().clear();
                 configurationsListView.getItems().addAll(configurations);
+                logger.debug("No value in search input, returning all configurations");
                 return;
             }
 
@@ -44,9 +48,9 @@ public class LabTCPController implements Initializable {
                     .filter(conf -> conf.startsWith(value))
                     .toList();
 
+            logger.debug("Found {} configurations.", foundConfigurations);
             configurationsListView.getItems().clear();
             configurationsListView.getItems().addAll(foundConfigurations);
-
         }
     };
 

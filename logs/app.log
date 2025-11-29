@@ -1,0 +1,3 @@
+[2025-11-29 13:52:43] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 13:53:14] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 13:53:16] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - No value in search input, returning all configurations
