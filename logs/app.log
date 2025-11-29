@@ -1,3 +1,427 @@
 [2025-11-29 13:52:43] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
 [2025-11-29 13:53:14] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
 [2025-11-29 13:53:16] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - No value in search input, returning all configurations
+[2025-11-29 13:59:46] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [1234] configurations.
+[2025-11-29 13:59:46] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [1234] configurations.
+[2025-11-29 13:59:46] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [1234] configurations.
+[2025-11-29 13:59:48] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - No value in search input, returning all configurations
+[2025-11-29 16:08:07] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:08:57] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:09:31] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:11:38] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:11:50] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:12:36] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:13:11] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:13:11] WARN  io.github.gfmois.labtcp.ui.controller.LabTCPController - No application settings found, showing setup dialog.
+[2025-11-29 16:16:12] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:16:12] WARN  io.github.gfmois.labtcp.ui.controller.LabTCPController - No application settings found, showing setup dialog.
+[2025-11-29 16:18:03] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:24:58] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:25:15] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - User don't want to set configurations path, exiting application.
+[2025-11-29 16:25:24] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:25:26] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - User don't want to set configurations path, exiting application.
+[2025-11-29 16:25:35] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:25:52] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - User don't want to set configurations path, exiting application.
+[2025-11-29 16:25:55] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:26:24] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:27:25] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:29:51] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:34:36] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:35:11] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:35:51] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:37:11] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:38:01] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:42:22] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:42:28] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - User don't want to change configurations path, doing nothing.
+[2025-11-29 16:46:45] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:49:32] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 16:54:21] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:08:41] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:16:31] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:18:02] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:21:14] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:21:30] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:24:00] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:24:11] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:31:32] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:31:32] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file C:\Users\Moisés\Desktop\test\test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:31:45] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:31:45] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:35:41] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:35:41] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:35:41] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `io.github.gfmois.labtcp.model.Configuration` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 2, column: 5]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1887) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:414) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1375) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1508) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:348) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 17:57:11] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:57:11] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:57:11] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `io.github.gfmois.labtcp.model.Configuration` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 2, column: 5]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1887) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:414) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1375) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1508) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:348) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 17:58:32] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:58:32] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:58:32] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `io.github.gfmois.labtcp.model.Configuration` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 2, column: 5]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1887) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:414) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1375) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1508) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:348) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 17:59:15] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:59:15] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:59:15] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "receiveMessageRegex" (class io.github.gfmois.labtcp.model.Message), not marked as ignorable (2 known properties: "responseBuilder", "receivedRegex"])
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 8, column: 37] (through reference chain: io.github.gfmois.labtcp.model.Configuration["messages"]->java.util.ArrayList[0]->io.github.gfmois.labtcp.model.Message["receiveMessageRegex"])
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException.from(UnrecognizedPropertyException.java:61) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleUnknownProperty(DeserializationContext.java:1153) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.StdDeserializer.handleUnknownProperty(StdDeserializer.java:2241) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializerBase.handleUnknownProperty(BeanDeserializerBase.java:1793) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializerBase.handleUnknownVanilla(BeanDeserializerBase.java:1771) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:316) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:361) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:246) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 17:59:32] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 17:59:32] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 17:59:32] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `io.github.gfmois.labtcp.model.response.ResponseType` from String "static": not one of the values accepted for Enum class: [MESSAGE_PART, STATIC]
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 11, column: 29] (through reference chain: io.github.gfmois.labtcp.model.Configuration["messages"]->java.util.ArrayList[0]->io.github.gfmois.labtcp.model.Message["responseBuilder"]->java.util.ArrayList[0]->io.github.gfmois.labtcp.model.response.ResponseMessagePart["type"])
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.InvalidFormatException.from(InvalidFormatException.java:67) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.weirdStringException(DeserializationContext.java:1958) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleWeirdStringValue(DeserializationContext.java:1245) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer._deserializeAltString(EnumDeserializer.java:447) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer._fromString(EnumDeserializer.java:304) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer.deserialize(EnumDeserializer.java:273) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:361) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:246) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:361) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:246) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 18:01:24] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:01:24] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:01:24] ERROR io.github.gfmois.labtcp.ui.controller.LabTCPController - Could not parse JSON in file C:\Users\Moisés\Desktop\test\test.json
+com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `io.github.gfmois.labtcp.model.response.ResponseType` from String "static": not one of the values accepted for Enum class: [MESSAGE_PART, STATIC]
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 11, column: 29] (through reference chain: io.github.gfmois.labtcp.model.Configuration["messages"]->java.util.ArrayList[0]->io.github.gfmois.labtcp.model.Message["responseBuilder"]->java.util.ArrayList[0]->io.github.gfmois.labtcp.model.response.ResponseMessagePart["type"])
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.exc.InvalidFormatException.from(InvalidFormatException.java:67) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.weirdStringException(DeserializationContext.java:1958) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.DeserializationContext.handleWeirdStringValue(DeserializationContext.java:1245) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer._deserializeAltString(EnumDeserializer.java:447) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer._fromString(EnumDeserializer.java:304) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.EnumDeserializer.deserialize(EnumDeserializer.java:273) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:361) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:246) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:361) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:246) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:310) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4905) ~[jackson-databind-2.17.2.jar:?]
+	at com.fasterxml.jackson.databind@2.17.2/com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3713) ~[jackson-databind-2.17.2.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.lambda$initialize$2(LabTCPController.java:139) ~[classes/:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[?:?]
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133) ~[?:?]
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1939) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[?:?]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[?:?]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.controller.LabTCPController.initialize(LabTCPController.java:136) ~[classes/:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2670) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2563) ~[javafx-fxml-21.0.6-win.jar:?]
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2531) ~[javafx-fxml-21.0.6-win.jar:?]
+	at io.github.gfmois.labtcp/io.github.gfmois.labtcp.ui.LabTCPApplication.start(LabTCPApplication.java:38) ~[classes/:?]
+	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:839) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:483) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:456) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400) ~[?:?]
+	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$11(PlatformImpl.java:455) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run$$$capture(InvokeLaterDispatcher.java:95) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method) ~[javafx-graphics-21.0.6-win.jar:?]
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185) ~[javafx-graphics-21.0.6-win.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[2025-11-29 18:03:33] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:03:33] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:03:33] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:03:55] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:03:55] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:03:55] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:04:12] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:04:12] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:04:12] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:08:38] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:08:39] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:08:39] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:10:17] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:10:18] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:10:18] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:10:22] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [] configurations.
+[2025-11-29 18:10:22] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - No value in search input, returning all configurations
+[2025-11-29 18:10:23] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:23] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:23] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:23] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:24] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:24] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:24] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - Found [test] configurations.
+[2025-11-29 18:10:24] DEBUG io.github.gfmois.labtcp.ui.controller.LabTCPController - No value in search input, returning all configurations
+[2025-11-29 18:11:41] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:11:41] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:11:41] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:13:18] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:13:18] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:13:18] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:13:34] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:13:34] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:13:34] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:13:45] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:13:45] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:13:45] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:16:54] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:16:54] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:16:54] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:17:13] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:17:14] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:17:14] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:17:23] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:17:23] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:17:23] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:17:47] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:17:47] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:17:47] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:17:58] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:17:58] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:17:58] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='test', description='description', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:18:34] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:18:34] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:18:34] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:21:06] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:21:06] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:21:06] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:33:09] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:36:56] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:36:56] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:36:56] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:37:44] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:37:44] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:37:44] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:42:15] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:42:16] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:42:16] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:42:31] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:42:31] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:42:31] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:43:38] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:43:38] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:43:38] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:46:37] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:46:38] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:46:38] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:46:40] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=false, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:46:49] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:49:47] INFO  io.github.gfmois.labtcp.db.Database - Database connection established to C:\Users\Moisés\.labtcp\db\labtcp.db
+[2025-11-29 18:49:47] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Found file test.json in configurations folder C:\Users\Moisés\Desktop\test
+[2025-11-29 18:49:47] DEBUG io.github.gfmois.labtcp.service.ConfigurationService - Parsed file test.json to configuration Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:49:50] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=false, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:49:51] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:49:55] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=true, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]
+[2025-11-29 18:49:59] INFO  io.github.gfmois.labtcp.ui.controller.LabTCPController - New Instance Configuration: Configuration[id=null, name='Lululemon', description='Integration test for Arvato Armada for the project of Lululemon', configPath='null', port=0, broadcast=false, hasToRespond=true, messages=[Message[receivedRegex='^hello, (.+)$', responseBuilder=[ResponseMessagePart[type=STATIC, text='Hi, ', partIndex=null], ResponseMessagePart[type=MESSAGE_PART, text='null', partIndex=0], ResponseMessagePart[type=STATIC, text='!', partIndex=null]]]]]

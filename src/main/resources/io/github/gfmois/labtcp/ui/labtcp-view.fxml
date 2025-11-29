@@ -3,22 +3,85 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.2608695652173913" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.gfmois.labtcp.ui.controller.LabTCPController">
-    <items>
-        <VBox spacing="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<SplitPane dividerPositions="0.2608695652173913" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.gfmois.labtcp.ui.controller.LabTCPController">
+    <VBox spacing="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
 
-            <TextField fx:id="searchField" promptText="Search configuration" style="-fx-border-style: none;">
+        <TextField fx:id="searchField" promptText="Search configuration" style="-fx-border-style: none;">
             <VBox.margin>
-               <Insets />
+                <Insets/>
             </VBox.margin>
             <padding>
-               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </padding></TextField>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </TextField>
 
-            <ListView fx:id="configurationsListView" VBox.vgrow="ALWAYS" />
+        <ListView fx:id="configurationsListView" VBox.vgrow="ALWAYS"/>
+        <Button fx:id="changeConfigurationsPathButton" maxWidth="Infinity" mnemonicParsing="false"
+                text="Change Configurations Path">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </Button>
+    </VBox>
+    <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="6.0">
+        <Label fx:id="noConfigSelected" alignment="CENTER" prefWidth="444.0"
+               text="No configuration selected yet">
+            <font>
+                <Font size="22.0"/>
+            </font>
+        </Label>
+        <VBox fx:id="configurationContainer" prefHeight="418.0" prefWidth="439.0" VBox.vgrow="ALWAYS" managed="false" visible="false">
+            <Label fx:id="configurationSelectedName" maxWidth="Infinity">
+                <font>
+                    <Font size="32.0"/>
+                </font>
+                <padding>
+                    <Insets left="10.0" right="10.0" top="5.0"/>
+                </padding>
+            </Label>
+            <Label fx:id="configurationSelectedDescription" layoutX="10.0" layoutY="10.0" maxWidth="Infinity"
+                   textFill="#0000008c">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+                <padding>
+                    <Insets bottom="5.0" left="10.0" right="10.0"/>
+                </padding>
+            </Label>
+            <VBox fx:id="configurationDetailsContainer"
+                  spacing="10.0"
+                  VBox.vgrow="ALWAYS">
+
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <!-- SECCIÓN BEHAVIOR -->
+                <TitledPane text="Behavior">
+                    <content>
+                        <VBox spacing="6.0">
+                            <CheckBox fx:id="broadcastCheckBox"
+                                      text="Broadcast to all connected clients"/>
+                            <CheckBox fx:id="hasToRespondCheckBox"
+                                      text="Auto respond to received messages"/>
+                        </VBox>
+                    </content>
+                </TitledPane>
+
+                <!-- SECCIÓN MESSAGES (placeholder por ahora) -->
+                <TitledPane text="Messages" expanded="false">
+                    <content>
+                        <Label text="Messages editor coming soon..." textFill="#888888"/>
+                    </content>
+                </TitledPane>
+
+            </VBox>
+
         </VBox>
-
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-    </items>
+    </VBox>
 </SplitPane>

@@ -1,12 +1,19 @@
 package io.github.gfmois.labtcp.ui.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.gfmois.labtcp.app.AppSettings;
+import io.github.gfmois.labtcp.model.Configuration;
+import io.github.gfmois.labtcp.service.AppSettingsService;
+import io.github.gfmois.labtcp.service.ConfigurationService;
+import io.github.gfmois.labtcp.ui.components.PathDialog;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,11 +21,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class LabTCPController implements Initializable {
     private static final Logger logger = LogManager.getLogger(LabTCPController.class);
-    private final List<String> configurations = new ArrayList<>();
-    private String selectedConfiguration;
+    private List<Configuration> configurations = new ArrayList<>();
+    private final AppSettingsService appSettingsService;
+    private final ConfigurationService configurationService;
+    private List<String> configurationNames = new ArrayList<>();
 
     @FXML
     private ListView<String> configurationsListView;
@@ -26,25 +36,64 @@ public class LabTCPController implements Initializable {
     @FXML
     private TextField searchField;
 
+    @FXML
+    private Label noConfigSelected;
+
+    @FXML
+    private VBox configurationContainer;
+
+    @FXML
+    private Label configurationSelectedName;
+
+    @FXML
+    private Label configurationSelectedDescription;
+
+    @FXML
+    private Button changeConfigurationsPathButton;
+
+    @FXML
+    private CheckBox broadcastCheckBox;
+
+    @FXML
+    private CheckBox hasToRespondCheckBox;
+
+    public LabTCPController() {
+        this.appSettingsService = new AppSettingsService();
+
+        AppSettings appSettings = appSettingsService.getAppSettings();
+        this.configurationService = new ConfigurationService(appSettings);
+    }
+
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-            selectedConfiguration = configurationsListView.getSelectionModel().getSelectedItem();
+            String selectedConfigurationName = configurationsListView.getSelectionModel().getSelectedItem();
+            noConfigSelected.visibleProperty().set(false); // Hide no configuration selected label
+            noConfigSelected.managedProperty().set(false);
+
+            Configuration selectedConfiguration = getConfiguration(selectedConfigurationName);
+
+            hasToRespondCheckBox.setSelected(selectedConfiguration.isHasToRespond());
+            broadcastCheckBox.setSelected(selectedConfiguration.isBroadcast());
+            configurationSelectedName.textProperty().set(selectedConfiguration.getName());
+            configurationSelectedDescription.textProperty().set(selectedConfiguration.getDescription());
+            configurationContainer.visibleProperty().set(true); // Set configuration selected container visible
+            configurationContainer.managedProperty().set(true);
         }
     };
 
-    private final ChangeListener<String> searchConfigurationListener = new ChangeListener<String>() {
+    private final ChangeListener<String> searchConfigurationListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
             String value = observableValue.getValue();
             if (value == null || value.isEmpty()) {
                 configurationsListView.getItems().clear();
-                configurationsListView.getItems().addAll(configurations);
+                configurationsListView.getItems().addAll(configurationNames);
                 logger.debug("No value in search input, returning all configurations");
                 return;
             }
 
-            List<String> foundConfigurations = configurations.stream()
+            List<String> foundConfigurations = configurationNames.stream()
                     .filter(conf -> conf.startsWith(value))
                     .toList();
 
@@ -54,13 +103,77 @@ public class LabTCPController implements Initializable {
         }
     };
 
+    private final EventHandler<ActionEvent> changeConfigurationsPathListener = new EventHandler<>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            PathDialog setConfigurationsPathDialog = new PathDialog();
+            String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
+            if (selectedPath == null || selectedPath.isEmpty()) {
+                logger.info("User don't want to change configurations path, doing nothing.");
+                return;
+            }
+
+            appSettingsService.save(selectedPath, null, true);
+        }
+    };
+
+    private Configuration getSelectedConfiguration() {
+        String name = configurationsListView.getSelectionModel().getSelectedItem();
+        if (name == null || name.isEmpty()) return null;
+        return getConfiguration(name);
+    }
+
+
+    private void bindCheckBox(CheckBox box, Consumer<Configuration> updater) {
+        box.setOnAction(event -> {
+            Configuration cfg = getSelectedConfiguration();
+            if (cfg == null) {
+                logger.info("No configuration selected");
+                return;
+            }
+
+            updater.accept(cfg);
+
+            logger.info("New Instance Configuration: {}", cfg);
+        });
+    }
+
+    private Configuration getConfiguration(String selectedConfigurationName) {
+        Configuration selectedConfiguration = configurations.stream()
+                .filter(c -> c.getName().equals(selectedConfigurationName))
+                .findFirst()
+                .orElse(null);
+        if (selectedConfiguration == null) {
+            throw new IllegalArgumentException("Configuration name is null");
+        }
+        return selectedConfiguration;
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        configurations.addAll(List.of(new String[]{"asdf", "1234", "test"}));
-
         searchField.textProperty().addListener(searchConfigurationListener);
-
-        configurationsListView.getItems().addAll(configurations);
         configurationsListView.getSelectionModel().selectedItemProperty().addListener(configurationListSelectionListener);
+        changeConfigurationsPathButton.setOnAction(changeConfigurationsPathListener);
+        bindCheckBox(hasToRespondCheckBox, cfg -> cfg.setHasToRespond(hasToRespondCheckBox.isSelected()));
+        bindCheckBox(broadcastCheckBox, cfg -> cfg.setBroadcast(broadcastCheckBox.isSelected()));
+
+
+        // FIXME: This is OK? I mean, I have the same code in LabTCPApplication
+        AppSettings appSettings = appSettingsService.getAppSettings();
+        if (appSettings.getConfigurationsPath() == null || appSettings.getConfigurationsPath().isEmpty()) {
+            PathDialog setConfigurationsPathDialog = new PathDialog();
+            String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
+            if (selectedPath == null || selectedPath.isEmpty()) {
+                logger.info("User don't want to set configurations path, exiting application.");
+                System.exit(0);
+            }
+
+            appSettingsService.save(selectedPath, null, true);
+        }
+
+        configurations = configurationService.getAll();
+        configurationNames = configurations.stream().map(Configuration::getName).toList();
+        configurationsListView.getItems().addAll(configurationNames);
     }
 }
