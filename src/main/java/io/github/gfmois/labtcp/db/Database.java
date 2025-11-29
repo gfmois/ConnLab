@@ -41,32 +41,7 @@ public class Database {
 
     private static void createSchema(Connection connection) throws SQLException {
         try (Statement st = connection.createStatement()) {
-            st.executeUpdate(""" 
-                       CREATE TABLE IF NOT EXISTS configurations (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT NOT NULL UNIQUE,
-                        description TEXT,
-                        config_path TEXT NOT NULL,
-                        broadcast INTEGER NOT NULL DEFAULT 0,
-                        has_to_respond INTEGER NOT NULL DEFAULT 0
-                    );
-                    
-                    CREATE TABLE IF NOT EXISTS messages (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        configuration_id INTEGER NOT NULL,
-                        received_regex TEXT NOT NULL,
-                        FOREIGN KEY (configuration_id) REFERENCES configurations(id) ON DELETE CASCADE
-                    );
-                    
-                    CREATE TABLE IF NOT EXISTS message_parts (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        message_id INTEGER NOT NULL,
-                        type TEXT NOT NULL,
-                        text TEXT,
-                        part_index INTEGER,
-                        FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE
-                    );
-                    
+            st.executeUpdate("""                    
                     CREATE TABLE IF NOT EXISTS app_settings (
                         id INTEGER PRIMARY KEY CHECK (id = 1),
                         last_opened_configuration_id INTEGER,
