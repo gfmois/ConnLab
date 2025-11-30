@@ -176,7 +176,13 @@ public class LabTCPController implements Initializable {
     private void onStartServerClicked() {
         Configuration cfg = getSelectedConfiguration();
         try {
-            tcpServerService.start("0.0.0.0", 12345, cfg);
+            Configuration activeConfiguration = getSelectedConfiguration();
+            if (activeConfiguration == null || activeConfiguration.getPort() == 0) {
+                logger.warn("Cannot retrieve selected configuration, using default port");
+                activeConfiguration = new Configuration();
+                activeConfiguration.setPort(8080);
+            }
+            tcpServerService.start("0.0.0.0", activeConfiguration.getPort(), cfg);
             startServerBtn.setVisible(false);
             startServerBtn.setManaged(false);
             stopServerBtn.setVisible(true);

@@ -113,7 +113,7 @@ public class TcpServerService implements ServerEventListener {
         }
 
         String response = buildResponse(incoming, matchedMessage);
-        if (response == null || response.isEmpty()) {
+        if (response.isEmpty()) {
             logger.debug("Built empty response for incoming: {}", incoming);
             return;
         }
