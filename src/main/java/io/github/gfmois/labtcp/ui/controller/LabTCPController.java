@@ -1,10 +1,10 @@
 package io.github.gfmois.labtcp.ui.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gfmois.labtcp.app.AppSettings;
 import io.github.gfmois.labtcp.model.Configuration;
 import io.github.gfmois.labtcp.service.AppSettingsService;
 import io.github.gfmois.labtcp.service.ConfigurationService;
+import io.github.gfmois.labtcp.service.TcpServerService;
 import io.github.gfmois.labtcp.ui.components.PathDialog;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,10 +13,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +27,10 @@ import java.util.function.Consumer;
 
 public class LabTCPController implements Initializable {
     private static final Logger logger = LogManager.getLogger(LabTCPController.class);
-    private List<Configuration> configurations = new ArrayList<>();
     private final AppSettingsService appSettingsService;
     private final ConfigurationService configurationService;
+    private final TcpServerService tcpServerService;
+    private List<Configuration> configurations = new ArrayList<>();
     private List<String> configurationNames = new ArrayList<>();
 
     @FXML
@@ -57,11 +60,19 @@ public class LabTCPController implements Initializable {
     @FXML
     private CheckBox hasToRespondCheckBox;
 
-    public LabTCPController() {
-        this.appSettingsService = new AppSettingsService();
+    @FXML
+    private HBox startListeningWrapper;
 
-        AppSettings appSettings = appSettingsService.getAppSettings();
-        this.configurationService = new ConfigurationService(appSettings);
+    @FXML
+    private Button startServerBtn;
+
+    @FXML
+    private Button stopServerBtn;
+
+    public LabTCPController() {
+        this.tcpServerService = new TcpServerService();
+        this.appSettingsService = new AppSettingsService();
+        this.configurationService = new ConfigurationService();
     }
 
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
@@ -79,6 +90,8 @@ public class LabTCPController implements Initializable {
             configurationSelectedDescription.textProperty().set(selectedConfiguration.getDescription());
             configurationContainer.visibleProperty().set(true); // Set configuration selected container visible
             configurationContainer.managedProperty().set(true);
+            startListeningWrapper.visibleProperty().set(true);
+            startListeningWrapper.managedProperty().set(true);
         }
     };
 
@@ -106,7 +119,8 @@ public class LabTCPController implements Initializable {
     private final EventHandler<ActionEvent> changeConfigurationsPathListener = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            PathDialog setConfigurationsPathDialog = new PathDialog();
+            AppSettings appSettings = appSettingsService.getAppSettings();
+            PathDialog setConfigurationsPathDialog = new PathDialog(appSettings);
             String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
             if (selectedPath == null || selectedPath.isEmpty()) {
                 logger.info("User don't want to change configurations path, doing nothing.");
@@ -114,6 +128,15 @@ public class LabTCPController implements Initializable {
             }
 
             appSettingsService.save(selectedPath, null, true);
+            configurations.clear();
+            List<Configuration> configurationsFound = configurationService.getAll();
+            logger.info("Found {} configurations on the new path: {}", configurationsFound.size(), selectedPath);
+            configurations.addAll(configurationsFound);
+
+            configurationNames = configurations.stream().map(Configuration::getName).toList();
+
+            configurationsListView.getItems().clear();
+            configurationsListView.getItems().addAll(configurationNames);
         }
     };
 
@@ -149,6 +172,28 @@ public class LabTCPController implements Initializable {
         return selectedConfiguration;
     }
 
+    @FXML
+    private void onStartServerClicked() {
+        Configuration cfg = getSelectedConfiguration();
+        try {
+            tcpServerService.start("0.0.0.0", 12345, cfg);
+            startServerBtn.setVisible(false);
+            startServerBtn.setManaged(false);
+            stopServerBtn.setVisible(true);
+            stopServerBtn.setManaged(true);
+        } catch (IOException e) {
+            logger.error("Error while trying to start server", e);
+        }
+    }
+
+    @FXML
+    private void onStopServerClicked() {
+        tcpServerService.stop();
+        startServerBtn.setVisible(true);
+        startServerBtn.setManaged(true);
+        stopServerBtn.setVisible(false);
+        stopServerBtn.setManaged(false);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -158,11 +203,15 @@ public class LabTCPController implements Initializable {
         bindCheckBox(hasToRespondCheckBox, cfg -> cfg.setHasToRespond(hasToRespondCheckBox.isSelected()));
         bindCheckBox(broadcastCheckBox, cfg -> cfg.setBroadcast(broadcastCheckBox.isSelected()));
 
+        tcpServerService.addListener(event -> {
+            logger.info("Received Message Event from server: {}", event);
+        });
+
 
         // FIXME: This is OK? I mean, I have the same code in LabTCPApplication
         AppSettings appSettings = appSettingsService.getAppSettings();
         if (appSettings.getConfigurationsPath() == null || appSettings.getConfigurationsPath().isEmpty()) {
-            PathDialog setConfigurationsPathDialog = new PathDialog();
+            PathDialog setConfigurationsPathDialog = new PathDialog(appSettings);
             String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
             if (selectedPath == null || selectedPath.isEmpty()) {
                 logger.info("User don't want to set configurations path, exiting application.");

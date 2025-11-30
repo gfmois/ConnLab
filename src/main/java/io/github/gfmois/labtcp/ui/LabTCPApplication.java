@@ -45,7 +45,7 @@ public class LabTCPApplication extends Application {
     private void askForConfigurationsPathOrExit() {
         AppSettings settings = appSettingsService.getAppSettings();
         if (settings == null || settings.getConfigurationsPath() == null || settings.getConfigurationsPath().isEmpty()) {
-            PathDialog setConfigurationsPathDialog = new PathDialog();
+            PathDialog setConfigurationsPathDialog = new PathDialog(settings);
             String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
             if (selectedPath == null || selectedPath.isEmpty()) {
                 logger.info("User don't want to set configurations path, exiting application.");

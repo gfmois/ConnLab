@@ -14,6 +14,7 @@ module io.github.gfmois.labtcp {
     requires org.slf4j;
     requires java.desktop;
     requires com.fasterxml.jackson.databind;
+    requires org.apache.logging.log4j.core;
 
     opens io.github.gfmois.labtcp.ui to javafx.fxml;
     opens io.github.gfmois.labtcp.ui.controller to javafx.fxml;
@@ -25,4 +26,5 @@ module io.github.gfmois.labtcp {
     exports io.github.gfmois.labtcp.service;
     exports io.github.gfmois.labtcp.model;
     exports io.github.gfmois.labtcp.model.response;
+    exports io.github.gfmois.labtcp.core.server;
 }

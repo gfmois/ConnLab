@@ -1,5 +1,6 @@
 package io.github.gfmois.labtcp.ui.components;
 
+import io.github.gfmois.labtcp.app.AppSettings;
 import io.github.gfmois.labtcp.ui.LabTCPApplication;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -14,9 +15,9 @@ public class PathDialog extends Dialog<String> {
     private static final Logger logger = LogManager.getLogger(PathDialog.class);
     private final TextField pathField = new TextField();
 
-    public PathDialog() {
+    public PathDialog(AppSettings appSettings) {
         setTitle("Configurations Path");
-        setHeaderText("Enter the path for configurations:");
+        setHeaderText("Enter the path of the configurations:");
 
         // Change Icon
         try {
@@ -40,6 +41,7 @@ public class PathDialog extends Dialog<String> {
         grid.setPadding(new Insets(20, 20, 10 , 20));
 
         pathField.setPrefWidth(300); // NOTE: Get window width and calc 25%
+        pathField.setText(appSettings.getConfigurationsPath());
 
         grid.add(new Label("Path:"), 0, 0);
         grid.add(pathField, 1, 0);

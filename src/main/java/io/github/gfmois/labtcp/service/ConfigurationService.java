@@ -17,17 +17,15 @@ import java.util.stream.Stream;
 public class ConfigurationService {
     private static final Logger logger = LogManager.getLogger(ConfigurationService.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-    private final AppSettings appSettings;
+    private static AppSettingsService appSettingsService;
 
     public ConfigurationService() {
-        this.appSettings = new AppSettings();
-    }
-
-    public ConfigurationService(AppSettings appSettings) {
-        this.appSettings = appSettings;
+        appSettingsService = new AppSettingsService();
     }
 
     public List<Configuration> getAll() {
+        AppSettings appSettings = appSettingsService.getAppSettings();
+        logger.info("Using configurations path: {}", appSettings.getConfigurationsPath());
         List<Configuration> configurations = new ArrayList<>();
         try (Stream<Path> paths = Files.walk(Paths.get(appSettings.getConfigurationsPath()))) {
             paths
@@ -47,6 +45,7 @@ public class ConfigurationService {
             logger.error("Error while trying to read configurations folder", e);
         }
 
+        logger.info("Returning: {}", configurations);
         return configurations;
     }
 }
