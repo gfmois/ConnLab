@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 
-<VBox fx:id="configurationContainer"
-      fx:controller="io.github.gfmois.labtcp.ui.controller.ConfigurationDetailsController"
-      xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml/1"
-      spacing="10"
-      prefHeight="418.0"
-      prefWidth="439.0"
-      VBox.vgrow="ALWAYS"
-      visible="false"
-      managed="false">
+<VBox fx:id="configurationContainer" prefHeight="146.0" prefWidth="193.0" spacing="10" VBox.vgrow="ALWAYS"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="io.github.gfmois.labtcp.ui.controller.ConfigurationDetailsController">
 
     <Label fx:id="configurationSelectedName" maxWidth="Infinity">
         <font>
@@ -25,9 +18,7 @@
         </padding>
     </Label>
 
-    <Label fx:id="configurationSelectedDescription"
-           maxWidth="Infinity"
-           textFill="#0000008c">
+    <Label fx:id="configurationSelectedDescription" maxWidth="Infinity" textFill="#0000008c">
         <font>
             <Font size="16.0"/>
         </font>
@@ -41,16 +32,21 @@
             <Insets bottom="10" left="10" right="10" top="10"/>
         </padding>
 
-        <TitledPane text="Connection Settings">
-            <VBox spacing="6">
-                <CheckBox fx:id="broadcastCheckBox"
-                          text="Broadcast to all connected clients"/>
-                <CheckBox fx:id="hasToRespondCheckBox"
-                          text="Auto respond to received messages"/>
+        <TitledPane text="Connection Settings" collapsible="false">
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Port:"/>
+                    <TextField fx:id="portField"
+                               promptText="8080"
+                               maxWidth="100"
+                               prefColumnCount="6"/>
+                </HBox>
+                <CheckBox fx:id="broadcastCheckBox" text="Broadcast to all connected clients"/>
+                <CheckBox fx:id="hasToRespondCheckBox" text="Auto respond to received messages"/>
             </VBox>
         </TitledPane>
 
-        <TitledPane expanded="false" text="Messages">
+        <TitledPane expanded="false" text="Messages" collapsible="false">
             <Label text="Messages editor coming soon..." textFill="#888"/>
         </TitledPane>
     </VBox>

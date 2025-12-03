@@ -46,7 +46,7 @@ public class Database {
                         id INTEGER PRIMARY KEY CHECK (id = 1),
                         last_opened_configuration_id INTEGER,
                         configurations_path TEXT NOT NULL,
-                        FOREIGN KEY (last_opened_configuration_id) REFERENCES configurations(id)
+                        max_log_lines INTEGER NOT NULL
                     );
                     """);
         }

@@ -27,38 +27,92 @@
     </VBox>
 
     <!-- RIGHT PANEL WITH FOOTER -->
-    <BorderPane>
-        <center>
-            <StackPane>
-                <VBox alignment="CENTER">
-                    <Label fx:id="noConfigSelected"
-                           text="No configuration selected yet">
-                        <font>
-                            <Font size="22"/>
-                        </font>
-                    </Label>
-                </VBox>
-                
-                <fx:include source="configuration-details.fxml" fx:id="configurationDetails" />
-            </StackPane>
-        </center>
+    <TabPane fx:id="rightTabPane">
+        <Tab text="Configuration" closable="false">
+            <BorderPane>
+                <center>
+                    <StackPane>
+                        <VBox alignment="CENTER">
+                            <Label fx:id="noConfigSelected"
+                                   text="No configuration selected yet">
+                                <font>
+                                    <Font size="22"/>
+                                </font>
+                            </Label>
+                        </VBox>
 
-        <bottom>
-            <HBox alignment="CENTER_RIGHT" managed="false" spacing="10" visible="false" fx:id="startListeningWrapper">
-                <padding>
-                    <Insets bottom="10" left="10" right="10" top="10"/>
-                </padding>
+                        <fx:include source="configuration-details.fxml" fx:id="configurationDetails"/>
+                    </StackPane>
+                </center>
 
-                <Button fx:id="startServerBtn" style="-fx-font-size: 14px; -fx-padding: 10 20;" text="Start server"
-                        onAction="#onStartServerClicked"/>
-                <Button fx:id="stopServerBtn" style="-fx-font-size: 14px; -fx-padding: 10 20;" text="Stop server"
-                        managed="false"
-                        visible="false"
-                        onAction="#onStopServerClicked"
-                />
-            </HBox>
-        </bottom>
+                <bottom>
+                    <HBox alignment="CENTER_RIGHT" managed="false" spacing="10" visible="false"
+                          fx:id="startListeningWrapper">
+                        <padding>
+                            <Insets bottom="10" left="10" right="10" top="10"/>
+                        </padding>
 
-    </BorderPane>
+                        <Button fx:id="startServerBtn" style="-fx-font-size: 14px; -fx-padding: 10 20;"
+                                text="Start server"
+                                onAction="#onStartServerClicked"/>
+                        <Button fx:id="stopServerBtn" style="-fx-font-size: 14px; -fx-padding: 10 20;"
+                                text="Stop server"
+                                managed="false"
+                                visible="false"
+                                onAction="#onStopServerClicked"
+                        />
+                    </HBox>
+                </bottom>
+
+            </BorderPane>
+        </Tab>
+
+        <Tab text="Monitor" closable="false" disable="true" fx:id="monitorTab">
+            <BorderPane>
+                <center>
+                    <VBox spacing="8.0">
+                        <padding>
+                            <Insets top="10.0" left="10.0" bottom="10.0" right="10.0"/>
+                        </padding>
+
+                        <Label text="Server Monitor">
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+
+                        <HBox spacing="10">
+                            <Label text="Status:"/>
+                            <Label fx:id="serverStatusLabel" text="STOPPED"/>
+                            <Label text="Uptime:"/>
+                            <Label fx:id="serverUptimeLabel" text="00:00:00"/>
+                        </HBox>
+
+                        <TitledPane text="Clients">
+                            <TableView fx:id="clientsTable" prefHeight="120.0">
+                                <columns>
+                                    <TableColumn fx:id="clientIdColumn" text="ID" prefWidth="150.0"/>
+                                    <TableColumn fx:id="clientAddressColumn" text="Address" prefWidth="250.0"/>
+                                </columns>
+                            </TableView>
+                        </TitledPane>
+
+                        <TitledPane text="Logs" VBox.vgrow="ALWAYS">
+                            <ListView fx:id="logsListView" VBox.vgrow="ALWAYS"/>
+                        </TitledPane>
+                    </VBox>
+                </center>
+                <bottom>
+                    <HBox alignment="CENTER_LEFT" spacing="10" fx:id="messageSenderWrapper">
+                        <padding>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        </padding>
+
+                        <TextField/>
+                    </HBox>
+                </bottom>
+            </BorderPane>
+        </Tab>
+    </TabPane>
 
 </SplitPane>

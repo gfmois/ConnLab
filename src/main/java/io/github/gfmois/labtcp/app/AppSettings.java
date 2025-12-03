@@ -5,13 +5,23 @@ import java.util.StringJoiner;
 public class AppSettings {
     private String configurationsPath;
     private Integer lastConfigurationUsedId;
+    private Integer maxLogsLines = 1000;
 
     public AppSettings() {
     }
 
-    public AppSettings(Integer lastConfigurationUsedId, String configurationsPath) {
+    public AppSettings(Integer lastConfigurationUsedId, String configurationsPath, Integer maxLogsLines) {
         this.lastConfigurationUsedId = lastConfigurationUsedId;
         this.configurationsPath = configurationsPath;
+        this.maxLogsLines = maxLogsLines;
+    }
+
+    public Integer getMaxLogsLines() {
+        return maxLogsLines;
+    }
+
+    public void setMaxLogsLines(Integer maxLogsLines) {
+        this.maxLogsLines = maxLogsLines;
     }
 
     public String getConfigurationsPath() {
@@ -35,6 +45,7 @@ public class AppSettings {
         return new StringJoiner(", ", AppSettings.class.getSimpleName() + "[", "]")
                 .add("configurationsPath='" + configurationsPath + "'")
                 .add("lastConfigurationUsedId=" + lastConfigurationUsedId)
+                .add("maxLogsLines=" + maxLogsLines)
                 .toString();
     }
 }

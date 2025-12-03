@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,9 @@ public class ConfigurationDetailsController implements Initializable {
 
     @FXML
     private Label configurationSelectedDescription;
+
+    @FXML
+    private TextField portField;
 
     @FXML
     private CheckBox broadcastCheckBox;
@@ -52,6 +56,19 @@ public class ConfigurationDetailsController implements Initializable {
                 }
             }
         });
+
+        portField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (currentConfiguration != null) {
+                try {
+                    portField.setStyle("-fx-text-fill: black;");
+                    int port = Integer.parseInt(newVal);
+                    currentConfiguration.setPort(port);
+                } catch (NumberFormatException ignored) {
+                    portField.setStyle("-fx-text-fill: red;");
+                }
+            }
+        });
+
     }
 
     public void setOnFlagsChanged(Consumer<Configuration> onFlagsChanged) {
@@ -59,8 +76,6 @@ public class ConfigurationDetailsController implements Initializable {
     }
 
     public void showConfiguration(Configuration cfg) {
-        this.configurationContainer.setManaged(true);
-        this.configurationContainer.setVisible(true);
         this.currentConfiguration = cfg;
         if (cfg == null) {
             configurationSelectedName.setText("");
@@ -76,5 +91,6 @@ public class ConfigurationDetailsController implements Initializable {
         );
         broadcastCheckBox.setSelected(cfg.isBroadcast());
         hasToRespondCheckBox.setSelected(cfg.isHasToRespond());
+        portField.setText(String.valueOf(cfg.getPort()));
     }
 }
