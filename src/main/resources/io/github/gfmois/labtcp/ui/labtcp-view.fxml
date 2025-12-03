@@ -30,8 +30,7 @@
     <BorderPane>
         <center>
             <StackPane>
-                <VBox
-                        alignment="CENTER">
+                <VBox alignment="CENTER">
                     <Label fx:id="noConfigSelected"
                            text="No configuration selected yet">
                         <font>
@@ -39,45 +38,8 @@
                         </font>
                     </Label>
                 </VBox>
-                <VBox fx:id="configurationContainer" managed="false" prefHeight="418.0" prefWidth="439.0"
-                      visible="false" VBox.vgrow="ALWAYS">
-
-                    <Label fx:id="configurationSelectedName" maxWidth="Infinity">
-                        <font>
-                            <Font size="32.0"/>
-                        </font>
-                        <padding>
-                            <Insets left="10" right="10" top="5"/>
-                        </padding>
-                    </Label>
-
-                    <Label fx:id="configurationSelectedDescription" maxWidth="Infinity" textFill="#0000008c">
-                        <font>
-                            <Font size="16"/>
-                        </font>
-                        <padding>
-                            <Insets bottom="5" left="10" right="10"/>
-                        </padding>
-                    </Label>
-
-                    <VBox spacing="10" VBox.vgrow="ALWAYS">
-                        <padding>
-                            <Insets bottom="10" left="10" right="10" top="10"/>
-                        </padding>
-
-                        <TitledPane text="Connection Settings">
-                            <VBox spacing="6">
-                                <CheckBox fx:id="broadcastCheckBox" text="Broadcast to all connected clients"/>
-                                <CheckBox fx:id="hasToRespondCheckBox" text="Auto respond to received messages"/>
-                            </VBox>
-                        </TitledPane>
-
-                        <TitledPane expanded="false" text="Messages">
-                            <Label text="Messages editor coming soon..." textFill="#888"/>
-                        </TitledPane>
-                    </VBox>
-
-                </VBox>
+                
+                <fx:include source="configuration-details.fxml" fx:id="configurationDetails" />
             </StackPane>
         </center>
 

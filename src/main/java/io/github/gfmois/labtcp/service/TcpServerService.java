@@ -66,7 +66,6 @@ public class TcpServerService implements ServerEventListener {
             return;
         }
 
-        logger.info("Stopping TCP server");
         server.stop();
         server = null;
         activeConfiguration = null;

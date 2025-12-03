@@ -43,22 +43,7 @@ public class LabTCPController implements Initializable {
     private Label noConfigSelected;
 
     @FXML
-    private VBox configurationContainer;
-
-    @FXML
-    private Label configurationSelectedName;
-
-    @FXML
-    private Label configurationSelectedDescription;
-
-    @FXML
     private Button changeConfigurationsPathButton;
-
-    @FXML
-    private CheckBox broadcastCheckBox;
-
-    @FXML
-    private CheckBox hasToRespondCheckBox;
 
     @FXML
     private HBox startListeningWrapper;
@@ -68,6 +53,9 @@ public class LabTCPController implements Initializable {
 
     @FXML
     private Button stopServerBtn;
+
+    @FXML
+    private ConfigurationDetailsController configurationDetailsController;
 
     public LabTCPController() {
         this.tcpServerService = new TcpServerService();
@@ -79,19 +67,15 @@ public class LabTCPController implements Initializable {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
             String selectedConfigurationName = configurationsListView.getSelectionModel().getSelectedItem();
-            noConfigSelected.visibleProperty().set(false); // Hide no configuration selected label
-            noConfigSelected.managedProperty().set(false);
-
             Configuration selectedConfiguration = getConfiguration(selectedConfigurationName);
 
-            hasToRespondCheckBox.setSelected(selectedConfiguration.isHasToRespond());
-            broadcastCheckBox.setSelected(selectedConfiguration.isBroadcast());
-            configurationSelectedName.textProperty().set(selectedConfiguration.getName());
-            configurationSelectedDescription.textProperty().set(selectedConfiguration.getDescription());
-            configurationContainer.visibleProperty().set(true); // Set configuration selected container visible
-            configurationContainer.managedProperty().set(true);
-            startListeningWrapper.visibleProperty().set(true);
-            startListeningWrapper.managedProperty().set(true);
+            noConfigSelected.setVisible(false);
+            noConfigSelected.setManaged(false);
+
+            configurationDetailsController.showConfiguration(selectedConfiguration);
+
+            startListeningWrapper.setVisible(true);
+            startListeningWrapper.setManaged(true);
         }
     };
 
@@ -146,21 +130,6 @@ public class LabTCPController implements Initializable {
         return getConfiguration(name);
     }
 
-
-    private void bindCheckBox(CheckBox box, Consumer<Configuration> updater) {
-        box.setOnAction(event -> {
-            Configuration cfg = getSelectedConfiguration();
-            if (cfg == null) {
-                logger.info("No configuration selected");
-                return;
-            }
-
-            updater.accept(cfg);
-
-            logger.info("New Instance Configuration: {}", cfg);
-        });
-    }
-
     private Configuration getConfiguration(String selectedConfigurationName) {
         Configuration selectedConfiguration = configurations.stream()
                 .filter(c -> c.getName().equals(selectedConfigurationName))
@@ -206,15 +175,15 @@ public class LabTCPController implements Initializable {
         searchField.textProperty().addListener(searchConfigurationListener);
         configurationsListView.getSelectionModel().selectedItemProperty().addListener(configurationListSelectionListener);
         changeConfigurationsPathButton.setOnAction(changeConfigurationsPathListener);
-        bindCheckBox(hasToRespondCheckBox, cfg -> cfg.setHasToRespond(hasToRespondCheckBox.isSelected()));
-        bindCheckBox(broadcastCheckBox, cfg -> cfg.setBroadcast(broadcastCheckBox.isSelected()));
 
         tcpServerService.addListener(event -> {
             logger.info("Received Message Event from server: {}", event);
         });
 
+        configurationDetailsController.setOnFlagsChanged(cfg -> {
+            logger.info("New Instance Configuration: {}", cfg);
+        });
 
-        // FIXME: This is OK? I mean, I have the same code in LabTCPApplication
         AppSettings appSettings = appSettingsService.getAppSettings();
         if (appSettings.getConfigurationsPath() == null || appSettings.getConfigurationsPath().isEmpty()) {
             PathDialog setConfigurationsPathDialog = new PathDialog(appSettings);
