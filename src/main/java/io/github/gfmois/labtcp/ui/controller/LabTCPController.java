@@ -27,6 +27,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -178,7 +180,9 @@ public class LabTCPController implements Initializable {
     private void onStartServerClicked() {
         Configuration activeConfiguration = getSelectedConfiguration();
         if (activeConfiguration == null) {
-            // TODO: Show alert
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error while trying to recover the current configuration", ButtonType.OK);
+            // TODO: Add App Icon
+            alert.showAndWait();
             return;
         }
 
@@ -251,8 +255,6 @@ public class LabTCPController implements Initializable {
         clientIdColumn.setCellValueFactory(data -> data.getValue().idProperty().asObject());
         clientAddressColumn.setCellValueFactory(data -> data.getValue().addressProperty());
 
-        logsListView.setItems(FXCollections.observableArrayList());
-
         searchField.textProperty().addListener(searchConfigurationListener);
         configurationsListView.getSelectionModel().selectedItemProperty().addListener(configurationListSelectionListener);
         changeConfigurationsPathButton.setOnAction(changeConfigurationsPathListener);
@@ -303,26 +305,30 @@ public class LabTCPController implements Initializable {
     }
 
     private void handleServerEvent(ServerEvent event) {
-        String ts = event.getTimestamp().toString();
+        DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SS");
+        String ts = event.getTimestamp()
+                .atZone(ZoneId.systemDefault())
+                .format(FMT);
+
         switch (event.getType()) {
             case STARTED -> {
                 appendLog(ts + " [INFO]: Server started");
                 onServerStarted();
             }
             case STOPPED -> {
-                appendLog(ts + "[INFO]: Server stopped");
+                appendLog(ts + " [INFO]: Server stopped");
                 onServerStopped();
             }
             case CLIENT_CONNECTED -> {
-                appendLog(ts + "[INFO]: Client connected " + event.getRemoteAddress());
+                appendLog(ts + " [INFO]: Client connected " + event.getRemoteAddress());
                 addClientRow(event);
             }
             case CLIENT_DISCONNECTED -> {
-                appendLog(ts + "[INFO]: Client disconnected: " + event.getRemoteAddress());
+                appendLog(ts + " [INFO]: Client disconnected: " + event.getRemoteAddress());
                 removeClientRow(event);
             }
-            case MESSAGE_RECEIVED -> appendLog(ts + "[RX] [" + event.getRemoteAddress() + "] " + event.getMessage());
-            case ERROR -> appendLog(ts + "[ERROR]: " + event.getError());
+            case MESSAGE_RECEIVED -> appendLog(ts + " [RX] [" + event.getRemoteAddress() + "] " + event.getMessage());
+            case ERROR -> appendLog(ts + " [ERROR]: " + event.getError());
         }
     }
 
