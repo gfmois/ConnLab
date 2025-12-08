@@ -9,7 +9,6 @@ public class Configuration {
     private String description;
     private String configPath;
     private int port;
-    private boolean broadcast;
     private boolean hasToRespond;
     private List<Message> messages;
 
@@ -21,7 +20,6 @@ public class Configuration {
             String description,
             String configPath,
             int port,
-            boolean broadcast,
             boolean hasToRespond,
             List<Message> messages
     ) {
@@ -30,7 +28,6 @@ public class Configuration {
         this.description = description;
         this.configPath = configPath;
         this.port = port;
-        this.broadcast = broadcast;
         this.hasToRespond = hasToRespond;
         this.messages = messages;
     }
@@ -40,22 +37,20 @@ public class Configuration {
             String description,
             String configPath,
             int port,
-            boolean broadcast,
             boolean hasToRespond,
             List<Message> messages
     ) {
-        this(null, name, description, configPath, port, broadcast, hasToRespond, messages);
+        this(null, name, description, configPath, port, hasToRespond, messages);
     }
 
     public Configuration(
             String name,
             String description,
             int port,
-            boolean broadcast,
             boolean hasToRespond,
             List<Message> messages
     ) {
-        this(null, name, description, null, port, broadcast, hasToRespond, messages);
+        this(null, name, description, null, port, hasToRespond, messages);
     }
 
     public Integer getId() {
@@ -90,14 +85,6 @@ public class Configuration {
         this.description = description;
     }
 
-    public boolean isBroadcast() {
-        return broadcast;
-    }
-
-    public void setBroadcast(boolean broadcast) {
-        this.broadcast = broadcast;
-    }
-
     public boolean isHasToRespond() {
         return hasToRespond;
     }
@@ -130,7 +117,6 @@ public class Configuration {
                 .add("description='" + description + "'")
                 .add("configPath='" + configPath + "'")
                 .add("port=" + port)
-                .add("broadcast=" + broadcast)
                 .add("hasToRespond=" + hasToRespond)
                 .add("messages=" + messages)
                 .toString();

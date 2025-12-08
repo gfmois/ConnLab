@@ -7,7 +7,11 @@ import io.github.gfmois.labtcp.model.Configuration;
 import io.github.gfmois.labtcp.service.AppSettingsService;
 import io.github.gfmois.labtcp.service.ConfigurationService;
 import io.github.gfmois.labtcp.service.TcpServerService;
+import io.github.gfmois.labtcp.ui.LabTCPApplication;
 import io.github.gfmois.labtcp.ui.components.PathDialog;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,9 +23,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +51,8 @@ public class LabTCPController implements Initializable {
     private List<Configuration> configurations = new ArrayList<>();
     private List<String> configurationNames = new ArrayList<>();
     private final AtomicInteger nextClientId = new AtomicInteger(1);
+
+    private Timeline uptimeTimeLine;
 
     @FXML
     private ListView<String> configurationsListView;
@@ -100,6 +109,12 @@ public class LabTCPController implements Initializable {
         this.tcpServerService = new TcpServerService();
         this.appSettingsService = new AppSettingsService();
         this.configurationService = new ConfigurationService();
+
+        this.uptimeTimeLine = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> updateUptimeLabel()),
+                new KeyFrame(Duration.seconds(1))
+        );
+        uptimeTimeLine.setCycleCount(Animation.INDEFINITE);
     }
 
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
@@ -181,7 +196,6 @@ public class LabTCPController implements Initializable {
         Configuration activeConfiguration = getSelectedConfiguration();
         if (activeConfiguration == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error while trying to recover the current configuration", ButtonType.OK);
-            // TODO: Add App Icon
             alert.showAndWait();
             return;
         }
@@ -224,12 +238,15 @@ public class LabTCPController implements Initializable {
         rightTabPane.getSelectionModel().select(monitorTab);
         serverStatusLabel.setText("RUNNING");
         serverStatusLabel.setStyle("-fx-text-fill: forestgreen");
+        uptimeTimeLine.playFromStart();
     }
 
     private void onServerStopped() {
         serverStatusLabel.setStyle("-fx-text-fill: black");
         serverStatusLabel.setText("STOPPED");
         rightTabPane.getSelectionModel().selectFirst();
+        uptimeTimeLine.stop();
+        serverUptimeLabel.setText("00:00:00");
         // TODO: Clear clients and restart uptime
     }
 
@@ -342,5 +359,24 @@ public class LabTCPController implements Initializable {
         clientsTable.getItems().removeIf(
                 client -> client.getAddress().equals(clientDisconnectedEvent.getRemoteAddress())
         );
+    }
+
+    private void updateUptimeLabel() {
+        long uptimeMillis = tcpServerService.getUptimeMillis();
+        serverUptimeLabel.setText(formatUptime(uptimeMillis));
+    }
+
+    private String formatUptime(long millis) {
+        long totalSeconds = millis / 1000;
+        long seconds = totalSeconds % 60;
+        long minutes = (totalSeconds / 60) % 60;
+        long hours = (totalSeconds / 3600) % 24;
+        long days = totalSeconds / 86400;
+
+        if (days > 0) {
+            return String.format("%dd %02d:%02d:%02d", days, hours, minutes, seconds);
+        } else {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
     }
 }

@@ -41,7 +41,6 @@
                                maxWidth="100"
                                prefColumnCount="6"/>
                 </HBox>
-                <CheckBox fx:id="broadcastCheckBox" text="Broadcast to all connected clients"/>
                 <CheckBox fx:id="hasToRespondCheckBox" text="Auto respond to received messages"/>
             </VBox>
         </TitledPane>

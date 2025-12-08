@@ -87,6 +87,10 @@ public class TcpServerService implements ServerEventListener {
         }
     }
 
+    public long getUptimeMillis() {
+        return server.getUptimeMillis();
+    }
+
     private void handleIncomingMessage(ServerEvent event) {
         publish(event); // For the UI
 
@@ -119,7 +123,7 @@ public class TcpServerService implements ServerEventListener {
 
         logger.info("Built response '{}' for incoming message '{}'", response, incoming);
 
-        if (activeConfiguration.isBroadcast()) {
+        if (matchedMessage.isBroadcast()) {
             server.broadcast(response);
         } else {
             server.sendToClient(event.getConnectionId(), response);

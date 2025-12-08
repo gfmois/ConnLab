@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class Message {
+    private boolean broadcast;
     private String receivedRegex;
     private List<ResponseMessagePart> responseBuilder;
 
@@ -25,9 +26,18 @@ public class Message {
         this.responseBuilder = responseBuilder;
     }
 
+    public boolean isBroadcast() {
+        return broadcast;
+    }
+
+    public void setBroadcast(boolean broadcast) {
+        this.broadcast = broadcast;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Message.class.getSimpleName() + "[", "]")
+                .add("broadcast=" + broadcast)
                 .add("receivedRegex='" + receivedRegex + "'")
                 .add("responseBuilder=" + responseBuilder)
                 .toString();

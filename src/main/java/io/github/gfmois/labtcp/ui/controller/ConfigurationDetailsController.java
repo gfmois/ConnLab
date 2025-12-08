@@ -32,22 +32,10 @@ public class ConfigurationDetailsController implements Initializable {
     private TextField portField;
 
     @FXML
-    private CheckBox broadcastCheckBox;
-
-    @FXML
     private CheckBox hasToRespondCheckBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        broadcastCheckBox.setOnAction(e -> {
-            if (currentConfiguration != null) {
-                currentConfiguration.setBroadcast(broadcastCheckBox.isSelected());
-                if (onFlagsChanged != null) {
-                    onFlagsChanged.accept(currentConfiguration);
-                }
-            }
-        });
-
         hasToRespondCheckBox.setOnAction(e -> {
             if (currentConfiguration != null) {
                 currentConfiguration.setHasToRespond(hasToRespondCheckBox.isSelected());
@@ -68,7 +56,6 @@ public class ConfigurationDetailsController implements Initializable {
                 }
             }
         });
-
     }
 
     public void setOnFlagsChanged(Consumer<Configuration> onFlagsChanged) {
@@ -80,7 +67,6 @@ public class ConfigurationDetailsController implements Initializable {
         if (cfg == null) {
             configurationSelectedName.setText("");
             configurationSelectedDescription.setText("");
-            broadcastCheckBox.setSelected(false);
             hasToRespondCheckBox.setSelected(false);
             return;
         }
@@ -89,7 +75,6 @@ public class ConfigurationDetailsController implements Initializable {
         configurationSelectedDescription.setText(
                 cfg.getDescription() != null ? cfg.getDescription() : "No description set yet"
         );
-        broadcastCheckBox.setSelected(cfg.isBroadcast());
         hasToRespondCheckBox.setSelected(cfg.isHasToRespond());
         portField.setText(String.valueOf(cfg.getPort()));
     }

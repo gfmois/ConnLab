@@ -17,6 +17,8 @@ public class TcpServer {
     private final String host;
     private final int port;
     private volatile boolean running = false;
+    private long startTime;
+
     private ServerSocket serverSocket;
     private Thread acceptThread;
 
@@ -51,6 +53,7 @@ public class TcpServer {
 
         serverSocket = new ServerSocket(port);
         running = true;
+        startTime = System.nanoTime();
 
         logger.info("TCP Server started on port: {}", port);
         publish(ServerEvent.started());
@@ -63,6 +66,7 @@ public class TcpServer {
     public synchronized void stop() {
         if (!running) return;
         running = false;
+        startTime = 0;
 
         logger.info("Stopping TCP Server...");
 
@@ -139,5 +143,11 @@ public class TcpServer {
         synchronized (clients) {
             return new HashMap<>(clients);
         }
+    }
+
+    public long getUptimeMillis() {
+        if (!running) return 0;
+        long elapsedNanos = System.nanoTime() - startTime;
+        return elapsedNanos / 1_000_000L;
     }
 }
