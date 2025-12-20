@@ -1,0 +1,10 @@
+.message-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 0 4 0;
+}
+
+.message-meta {
+    -fx-text-fill: #888;
+    -fx-font-size: 11px;
+}

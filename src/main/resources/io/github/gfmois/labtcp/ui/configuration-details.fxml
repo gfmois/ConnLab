@@ -45,8 +45,8 @@
             </VBox>
         </TitledPane>
 
-        <TitledPane expanded="false" text="Messages" collapsible="false">
-            <Label text="Messages editor coming soon..." textFill="#888"/>
+        <TitledPane expanded="true" text="Messages" collapsible="false" fx:id="messagesPane">
+            <Label text="Messages editor coming soon..." textFill="#888" fx:id="noMessagesLabel" />
         </TitledPane>
     </VBox>
 

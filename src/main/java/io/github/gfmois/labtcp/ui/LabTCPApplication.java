@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class LabTCPApplication extends Application {
     private static final Logger logger = LogManager.getLogger(LabTCPApplication.class);
@@ -36,6 +37,7 @@ public class LabTCPApplication extends Application {
         setAppIcon(stage);
 
         Scene scene = new Scene(fxmlLoader.load(), width, height);
+        loadAppStyles(scene);
         stage.setTitle("Lab TCP");
         stage.setScene(scene);
         askForConfigurationsPathOrExit();
@@ -62,5 +64,11 @@ public class LabTCPApplication extends Application {
             throw new IOException("Icon resource not found");
         }
         stage.getIcons().add(new Image(iconStream));
+    }
+
+    private void loadAppStyles(Scene scene) {
+        scene.getStylesheets().add(
+                Objects.requireNonNull(getClass().getResource("styles/style.css")).toExternalForm()
+        );
     }
 }

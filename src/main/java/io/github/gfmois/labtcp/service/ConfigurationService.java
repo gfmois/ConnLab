@@ -45,7 +45,7 @@ public class ConfigurationService {
             logger.error("Error while trying to read configurations folder", e);
         }
 
-        logger.info("Returning: {}", configurations);
+        logger.debug("Returning: {}", configurations);
         return configurations;
     }
 }

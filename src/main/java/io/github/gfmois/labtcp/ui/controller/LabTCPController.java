@@ -7,7 +7,6 @@ import io.github.gfmois.labtcp.model.Configuration;
 import io.github.gfmois.labtcp.service.AppSettingsService;
 import io.github.gfmois.labtcp.service.ConfigurationService;
 import io.github.gfmois.labtcp.service.TcpServerService;
-import io.github.gfmois.labtcp.ui.LabTCPApplication;
 import io.github.gfmois.labtcp.ui.components.PathDialog;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -23,11 +22,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +49,7 @@ public class LabTCPController implements Initializable {
     private List<String> configurationNames = new ArrayList<>();
     private final AtomicInteger nextClientId = new AtomicInteger(1);
 
-    private Timeline uptimeTimeLine;
+    private final Timeline uptimeTimeLine;
 
     @FXML
     private ListView<String> configurationsListView;
