@@ -5,16 +5,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientSession implements Runnable {
     private static final Logger logger = LogManager.getLogger(ClientSession.class);
     private final String id;
     private final Socket socket;
     private final TcpServer server;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
 
     private volatile boolean running = true;
-    private PrintWriter out;
+    private OutputStream out;
 
     public ClientSession(Socket socket, TcpServer tcpServer) {
         this.id = UUID.randomUUID().toString();
@@ -38,7 +41,7 @@ public class ClientSession implements Runnable {
     public void run() {
         logger.debug("Client session {} started", id);
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+            this.out = socket.getOutputStream();
 
             String line;
             while (running && (line = in.readLine()) != null) {
@@ -54,10 +57,14 @@ public class ClientSession implements Runnable {
         }
     }
 
-    public void send(String message) {
-        if (out != null) {
-            out.println(message);
+    public void send(String message) throws IOException {
+        if (out == null) {
+            throw new IOException("No OutputStream");
         }
+
+        byte[] data = (message + "\r\n").getBytes(StandardCharsets.UTF_8);
+        out.write(data);
+        out.flush();
     }
 
     public void stop() {
@@ -70,6 +77,20 @@ public class ClientSession implements Runnable {
             socket.close();
         } catch (IOException ignored) {
             logger.debug("Client session {} closed", id);
+        }
+    }
+
+    public void close() {
+        if (!closed.compareAndExchange(false, true)) {
+            return; // Already closed
+        }
+
+        running = false;
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+            logger.debug("Error closing client session: {}", id, e);
         }
     }
 }

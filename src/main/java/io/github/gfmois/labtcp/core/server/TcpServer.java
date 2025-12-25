@@ -6,10 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TcpServer {
@@ -18,6 +15,8 @@ public class TcpServer {
     private final int port;
     private volatile boolean running = false;
     private long startTime;
+    private final int maxTries = 3; // TODO: Configurable
+    private volatile int tries = 0;
 
     private ServerSocket serverSocket;
     private Thread acceptThread;
@@ -118,7 +117,7 @@ public class TcpServer {
         publish(ServerEvent.clientDisconnected(session.getId(), session.getRemoteAddress()));
     }
 
-    public void sendToClient(String connectionId, String message) {
+    public void sendToClient(String connectionId, String message) throws IOException {
         ClientSession session = clients.get(connectionId);
         if (session == null) {
             logger.warn("Could not find the session for {} id", connectionId);
@@ -128,11 +127,27 @@ public class TcpServer {
     }
 
     public void broadcast(String message) {
+        List<ClientSession> snapshot;
         synchronized (clients) {
-            for (ClientSession session : clients.values()) {
+            snapshot = new ArrayList<>(clients.values());
+        }
+
+        for (ClientSession session : snapshot) {
+            try {
                 session.send(message);
+            } catch (IOException e) {
+                logger.warn("Client {} failed during broadcast, removing it", session.getId(), e);
+                removeClient(session);
             }
         }
+    }
+
+    private void removeClient(ClientSession session) {
+        synchronized (clients) {
+            clients.remove(session.getId());
+        }
+
+        session.close();
     }
 
     public boolean isRunning() {

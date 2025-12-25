@@ -77,7 +77,11 @@ public class TcpServerService implements ServerEventListener {
 
     public void sendToClient(String connectionId, String message) {
         if (server != null && server.isRunning()) {
-            server.sendToClient(connectionId, message);
+            try {
+                server.sendToClient(connectionId, message);
+            } catch (IOException e) {
+                logger.error("Error while sending the message {} to client {}", message, connectionId);
+            }
         }
     }
 
@@ -126,7 +130,11 @@ public class TcpServerService implements ServerEventListener {
         if (matchedMessage.isBroadcast()) {
             server.broadcast(response);
         } else {
-            server.sendToClient(event.getConnectionId(), response);
+            try {
+                server.sendToClient(event.getConnectionId(), response);
+            } catch (IOException e) {
+                logger.error("Error while trying to send the message {} to client {}", response, event.getConnectionId(), e);
+            }
         }
     }
 
