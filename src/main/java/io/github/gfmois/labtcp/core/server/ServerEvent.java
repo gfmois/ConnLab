@@ -1,7 +1,5 @@
 package io.github.gfmois.labtcp.core.server;
 
-import org.apache.logging.log4j.core.jmx.Server;
-
 import java.time.Instant;
 import java.util.StringJoiner;
 
@@ -40,6 +38,10 @@ public class ServerEvent {
 
     public static ServerEvent messageReceived(String connectionId, String remoteAddress, String message) {
         return new ServerEvent(ServerEventType.MESSAGE_RECEIVED, connectionId, remoteAddress, message, null);
+    }
+
+    public static ServerEvent messageSent(String connectionId, String remoteAddress, String message) {
+        return new ServerEvent(ServerEventType.MESSAGE_SENT, connectionId, remoteAddress, message, null);
     }
 
     public static ServerEvent error(Throwable error) {

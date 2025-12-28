@@ -9,9 +9,11 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.naming.LimitExceededException;
+
 public class TcpServer {
     private static final Logger logger = LogManager.getLogger(TcpServer.class);
-    private final String host;
+    private final String host; // NOTE: This is not used
     private final int port;
     private volatile boolean running = false;
     private long startTime;
@@ -48,7 +50,8 @@ public class TcpServer {
     }
 
     public synchronized void start() throws IOException {
-        if (running) return;
+        if (running)
+            return;
 
         serverSocket = new ServerSocket(port);
         running = true;
@@ -63,7 +66,8 @@ public class TcpServer {
     }
 
     public synchronized void stop() {
-        if (!running) return;
+        if (!running)
+            return;
         running = false;
         startTime = 0;
 
@@ -117,16 +121,30 @@ public class TcpServer {
         publish(ServerEvent.clientDisconnected(session.getId(), session.getRemoteAddress()));
     }
 
-    public void sendToClient(String connectionId, String message) throws IOException {
+    public void sendToClient(String connectionId, String message) throws RetryLimitExceededException {
+        IOException lastFailure = null;
+
+        for (int attempt = 1; attempt <= maxTries; attempt++) {
+            try {
+                sendOnce(connectionId, message);
+                return;
+            } catch (IOException e) {
+                lastFailure = e;
+            }
+        }
+
+        throw new RetryLimitExceededException(maxTries, lastFailure);
+    }
+
+    private void sendOnce(String connectionId, String message) throws IOException {
         ClientSession session = clients.get(connectionId);
         if (session == null) {
-            logger.warn("Could not find the session for {} id", connectionId);
-            return;
+            throw new IOException("Session not found: " + connectionId);
         }
         session.send(message);
     }
 
-    public void broadcast(String message) {
+    public void broadcast(String message, boolean publishLog) {
         List<ClientSession> snapshot;
         synchronized (clients) {
             snapshot = new ArrayList<>(clients.values());
@@ -134,8 +152,11 @@ public class TcpServer {
 
         for (ClientSession session : snapshot) {
             try {
-                session.send(message);
-            } catch (IOException e) {
+                sendToClient(session.getId(), message);
+                if (publishLog) {
+                    publish(ServerEvent.messageSent("Server", session.getRemoteAddress(), message));
+                }
+            } catch (RetryLimitExceededException e) {
                 logger.warn("Client {} failed during broadcast, removing it", session.getId(), e);
                 removeClient(session);
             }
@@ -161,7 +182,8 @@ public class TcpServer {
     }
 
     public long getUptimeMillis() {
-        if (!running) return 0;
+        if (!running)
+            return 0;
         long elapsedNanos = System.nanoTime() - startTime;
         return elapsedNanos / 1_000_000L;
     }

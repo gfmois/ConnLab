@@ -6,5 +6,6 @@ public enum ServerEventType {
     CLIENT_CONNECTED,
     CLIENT_DISCONNECTED,
     MESSAGE_RECEIVED,
+    MESSAGE_SENT,
     ERROR
 }

@@ -35,6 +35,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -101,6 +102,9 @@ public class LabTCPController implements Initializable {
 
     @FXML
     private ListView<String> logsListView;
+
+    @FXML
+    private TextField messageField;
 
     public LabTCPController() {
         this.tcpServerService = new TcpServerService();
@@ -189,6 +193,17 @@ public class LabTCPController implements Initializable {
     }
 
     @FXML
+    private void onSend() {
+        String text = messageField.getText();
+        if (text == null || text.isBlank()) {
+            return;
+        }
+
+        tcpServerService.broadcast(text);
+        messageField.clear();
+    }
+
+    @FXML
     private void onStartServerClicked() {
         Configuration activeConfiguration = getSelectedConfiguration();
         if (activeConfiguration == null) {
@@ -203,7 +218,9 @@ public class LabTCPController implements Initializable {
                 activeConfiguration = new Configuration();
                 activeConfiguration.setPort(8080);
             }
-            tcpServerService.start("0.0.0.0", activeConfiguration.getPort(), activeConfiguration);
+
+            String host = Optional.ofNullable(activeConfiguration.getHost()).orElse("0.0.0.0");
+            tcpServerService.start(host, activeConfiguration.getPort(), activeConfiguration);
             onServerStarted();
             startServerBtn.setVisible(false);
             startServerBtn.setManaged(false);
@@ -342,6 +359,7 @@ public class LabTCPController implements Initializable {
                 removeClientRow(event);
             }
             case MESSAGE_RECEIVED -> appendLog(ts + " [RX] [" + event.getRemoteAddress() + "] " + event.getMessage());
+            case MESSAGE_SENT -> appendLog(ts + " [TX] [" + event.getRemoteAddress() + "] " + event.getMessage());
             case ERROR -> appendLog(ts + " [ERROR]: " + event.getError());
         }
     }

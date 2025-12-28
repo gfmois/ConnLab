@@ -1,6 +1,6 @@
 module io.github.gfmois.labtcp {
     // JavaFX modules
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
 
@@ -9,7 +9,7 @@ module io.github.gfmois.labtcp {
     requires org.apache.logging.log4j;
 
     // Database
-    requires java.sql;
+    requires transitive java.sql;
     requires org.xerial.sqlitejdbc;
     requires org.slf4j;
     requires java.desktop;
@@ -27,4 +27,5 @@ module io.github.gfmois.labtcp {
     exports io.github.gfmois.labtcp.model;
     exports io.github.gfmois.labtcp.model.response;
     exports io.github.gfmois.labtcp.core.server;
+    exports io.github.gfmois.labtcp.db.dao;
 }

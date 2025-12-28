@@ -1,7 +1,6 @@
 package io.github.gfmois.labtcp.ui.controller;
 
 import io.github.gfmois.labtcp.model.Configuration;
-import io.github.gfmois.labtcp.model.response.ResponseMessagePart;
 import io.github.gfmois.labtcp.model.response.ResponseType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -101,6 +100,15 @@ public class ConfigurationDetailsController implements Initializable {
                 Label title = new Label(message.getTitle());
                 title.getStyleClass().add("message-title");
                 content.getChildren().add(title);
+
+                CheckBox broadcastCheckBox = new CheckBox();
+                broadcastCheckBox.setText("Broadcast response");
+                broadcastCheckBox.setSelected(message.isBroadcast());
+                broadcastCheckBox.setOnAction(e -> {
+                    message.setBroadcast(broadcastCheckBox.isSelected());
+                });
+
+                content.getChildren().add(broadcastCheckBox);
 
                 var parts = message.getResponseBuilder();
                 if (parts == null || parts.isEmpty()) {

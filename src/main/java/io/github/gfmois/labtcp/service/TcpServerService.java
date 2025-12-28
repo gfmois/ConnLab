@@ -1,5 +1,6 @@
 package io.github.gfmois.labtcp.service;
 
+import io.github.gfmois.labtcp.core.server.RetryLimitExceededException;
 import io.github.gfmois.labtcp.core.server.ServerEvent;
 import io.github.gfmois.labtcp.core.server.ServerEventListener;
 import io.github.gfmois.labtcp.core.server.TcpServer;
@@ -79,16 +80,20 @@ public class TcpServerService implements ServerEventListener {
         if (server != null && server.isRunning()) {
             try {
                 server.sendToClient(connectionId, message);
-            } catch (IOException e) {
+            } catch (RetryLimitExceededException e) {
                 logger.error("Error while sending the message {} to client {}", message, connectionId);
             }
         }
     }
 
-    public void broadcast(String message) {
+    public void broadcast(String message, boolean showLog) {
         if (server != null && server.isRunning()) {
-            server.broadcast(message);
+            server.broadcast(message, showLog);
         }
+    }
+
+    public void broadcast(String message) {
+        broadcast(message, true);
     }
 
     public long getUptimeMillis() {
@@ -128,11 +133,11 @@ public class TcpServerService implements ServerEventListener {
         logger.info("Built response '{}' for incoming message '{}'", response, incoming);
 
         if (matchedMessage.isBroadcast()) {
-            server.broadcast(response);
+            server.broadcast(response, false);
         } else {
             try {
                 server.sendToClient(event.getConnectionId(), response);
-            } catch (IOException e) {
+            } catch (RetryLimitExceededException e) {
                 logger.error("Error while trying to send the message {} to client {}", response, event.getConnectionId(), e);
             }
         }

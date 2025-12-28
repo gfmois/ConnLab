@@ -8,6 +8,7 @@ public class Configuration {
     private String name;
     private String description;
     private String configPath;
+    private String host;
     private int port;
     private boolean hasToRespond;
     private List<Message> messages;
@@ -19,6 +20,7 @@ public class Configuration {
             String name,
             String description,
             String configPath,
+            String host,
             int port,
             boolean hasToRespond,
             List<Message> messages
@@ -27,6 +29,7 @@ public class Configuration {
         this.name = name;
         this.description = description;
         this.configPath = configPath;
+        this.host = host;
         this.port = port;
         this.hasToRespond = hasToRespond;
         this.messages = messages;
@@ -36,21 +39,23 @@ public class Configuration {
             String name,
             String description,
             String configPath,
+            String host,
             int port,
             boolean hasToRespond,
             List<Message> messages
     ) {
-        this(null, name, description, configPath, port, hasToRespond, messages);
+        this(null, name, description, configPath, host, port, hasToRespond, messages);
     }
 
     public Configuration(
             String name,
             String description,
+            String host,
             int port,
             boolean hasToRespond,
             List<Message> messages
     ) {
-        this(null, name, description, null, port, hasToRespond, messages);
+        this(null, name, description, null, host, port, hasToRespond, messages);
     }
 
     public Integer getId() {
@@ -109,16 +114,21 @@ public class Configuration {
         this.port = port;
     }
 
+    public String getHost() { return host; }
+
+    public void setHost(String host) { this.host = host; }
+
     @Override
     public String toString() {
-        return new StringJoiner(", ", Configuration.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("name='" + name + "'")
-                .add("description='" + description + "'")
-                .add("configPath='" + configPath + "'")
-                .add("port=" + port)
-                .add("hasToRespond=" + hasToRespond)
-                .add("messages=" + messages)
-                .toString();
+        return "Configuration{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", configPath='" + configPath + '\'' +
+                ", host='" + host + '\'' +
+                ", port=" + port +
+                ", hasToRespond=" + hasToRespond +
+                ", messages=" + messages +
+                '}';
     }
 }
