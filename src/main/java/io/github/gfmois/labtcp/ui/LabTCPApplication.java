@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.Properties;
 
 public class LabTCPApplication extends Application {
     private static final Logger logger = LogManager.getLogger(LabTCPApplication.class);
@@ -28,6 +29,8 @@ public class LabTCPApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("labtcp-view.fxml"));
+        final Properties properties = getProperties();
+        String version = properties.getProperty("version");
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getBounds();
@@ -38,10 +41,16 @@ public class LabTCPApplication extends Application {
 
         Scene scene = new Scene(fxmlLoader.load(), width, height);
         loadAppStyles(scene);
-        stage.setTitle("Lab TCP");
+        stage.setTitle(String.format("Lab TCP - v%s", version));
         stage.setScene(scene);
         askForConfigurationsPathOrExit();
         stage.show();
+    }
+
+    private Properties getProperties() throws IOException {
+        final Properties properties = new Properties();
+        properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        return properties;
     }
 
     private void askForConfigurationsPathOrExit() {

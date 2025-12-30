@@ -6,7 +6,7 @@
 
     <groupId>io.github.gfmois</groupId>
     <artifactId>labtcp</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>labtcp</name>
     <packaging>jar</packaging>
 
@@ -38,12 +38,12 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.23.1</version>
+            <version>2.25.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.23.1</version>
+            <version>2.25.1</version>
         </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
@@ -70,6 +70,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -128,7 +135,8 @@
                         <configuration>
                             <name>LabTCP</name>
                             <type>MSI</type>
-                            <mainJar>labtcp-0.0.1.jar</mainJar>
+                            <mainJar>labtcp-${version}.jar</mainJar>
+                            <icon>${project.basedir}/src/main/resources/favicon.ico</icon>
                             <mainClass>${main.class}</mainClass>
                             <input>${project.build.directory}/libs</input>
                             <destination>${project.build.directory}/dist</destination>
