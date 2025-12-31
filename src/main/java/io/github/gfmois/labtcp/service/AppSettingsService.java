@@ -22,6 +22,10 @@ public class AppSettingsService {
         return appSettingsDao.retrieveSettings();
     }
 
+    public void removeAppConfiguration() {
+        appSettingsDao.removeAppSettings();
+    }
+
     public AppSettings save(String configurationsPath, Integer lastConfigurationUsedId, boolean createIfNotExists) {
         String n = (configurationsPath == null) ? "" : configurationsPath.trim();
         if (n.isEmpty()) {

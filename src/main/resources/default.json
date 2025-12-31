@@ -1,0 +1,27 @@
+{
+    "name": "Default",
+    "description": "Default file for a simple configuration",
+    "port": 6969,
+    "hasToRespond": true,
+    "messages": [
+        {
+            "title": "Hello <name> Response",
+            "broadcast": true,
+            "receivedRegex": "^Hello, (.*)$",
+            "responseBuilder": [
+                {
+                    "type": "static",
+                    "text": "Bye, "
+                },
+                {
+                    "type": "messagePart",
+                    "partIndex": 1
+                },
+                {
+                    "type": "static",
+                    "text": "!"
+                }
+            ]
+        }
+    ]
+}

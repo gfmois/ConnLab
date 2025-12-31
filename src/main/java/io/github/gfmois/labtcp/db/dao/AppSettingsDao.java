@@ -2,6 +2,8 @@ package io.github.gfmois.labtcp.db.dao;
 
 import io.github.gfmois.labtcp.app.AppSettings;
 import io.github.gfmois.labtcp.db.Database;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AppSettingsDao {
+    private static final Logger logger = LogManager.getLogger(AppSettingsDao.class);
+
     public AppSettings retrieveSettings() {
         String sql = "SELECT configurations_path, last_opened_configuration_id, max_log_lines FROM app_settings LIMIT 1";
 
@@ -47,6 +51,18 @@ public class AppSettingsDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to save application settings", e);
+        }
+    }
+
+    public void removeAppSettings() {
+        String sql = "DELETE FROM app_settings";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            int rowsAffected = ps.executeUpdate();
+            logger.info("Removed {} rows", rowsAffected);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to remove app settings", e);
         }
     }
 }

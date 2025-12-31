@@ -15,7 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 
 public class LabTCPApplication extends Application {
@@ -28,6 +32,13 @@ public class LabTCPApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        boolean removeDb = Optional.of(Boolean.parseBoolean(System.getProperty("removeDb"))).orElse(false);
+        if (removeDb) {
+            appSettingsService.removeAppConfiguration();
+        }
+
+        askForConfigurationsPathOrExit();
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("labtcp-view.fxml"));
         final Properties properties = getProperties();
         String version = properties.getProperty("version");
@@ -43,7 +54,6 @@ public class LabTCPApplication extends Application {
         loadAppStyles(scene);
         stage.setTitle(String.format("Lab TCP - v%s", version));
         stage.setScene(scene);
-        askForConfigurationsPathOrExit();
         stage.show();
     }
 
@@ -55,6 +65,7 @@ public class LabTCPApplication extends Application {
 
     private void askForConfigurationsPathOrExit() {
         AppSettings settings = appSettingsService.getAppSettings();
+
         if (settings == null || settings.getConfigurationsPath() == null || settings.getConfigurationsPath().isEmpty()) {
             PathDialog setConfigurationsPathDialog = new PathDialog(settings);
             String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
@@ -64,6 +75,24 @@ public class LabTCPApplication extends Application {
             }
 
             appSettingsService.save(selectedPath, null, true);
+            createDefaultConfiguration(selectedPath);
+        }
+    }
+
+    /**
+     * Copies from the resources folder the `default.json` file to the selected path
+     */
+    private void createDefaultConfiguration(String selectedPath) {
+        try (InputStream defaultConfiguration = getClass().getClassLoader().getResourceAsStream("default.json")) {
+            logger.info("Retrieved defaultConfiguration");
+            if (defaultConfiguration == null) {
+                throw new IllegalStateException("Critical resource 'default.json' is missing from the application bundle.");
+            }
+
+            Files.copy(defaultConfiguration, Path.of(String.format("%s/default.json", selectedPath)), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            logger.error("Error while trying to recover default.json", e);
+            throw new RuntimeException(e);
         }
     }
 
