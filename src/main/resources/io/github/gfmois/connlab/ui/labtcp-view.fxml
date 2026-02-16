@@ -92,6 +92,7 @@
                                 <columns>
                                     <TableColumn fx:id="clientIdColumn" text="ID" prefWidth="150.0"/>
                                     <TableColumn fx:id="clientAddressColumn" text="Address" prefWidth="250.0"/>
+                                    <TableColumn fx:id="actionColumn" text="Actions" prefWidth="250.0"/>
                                 </columns>
                             </TableView>
                         </TitledPane>
@@ -107,9 +108,10 @@
                             <Insets top="10" right="10" bottom="10" left="10"/>
                         </padding>
 
-                        <TextField HBox.hgrow="ALWAYS" fx:id="messageField" promptText="Write a broadcast message" onAction="#onSend"/>
+                        <TextField HBox.hgrow="ALWAYS" fx:id="messageField" promptText="Write a broadcast message"
+                                   onAction="#onSend"/>
 
-                        <Button text="Send" minWidth="90" onAction="#onSend" />
+                        <Button text="Send" minWidth="90" onAction="#onSend"/>
                     </HBox>
                 </bottom>
             </BorderPane>

@@ -161,12 +161,38 @@ public class TcpServer {
         }
     }
 
-    private void removeClient(ClientSession session) {
-        synchronized (clients) {
-            clients.remove(session.getId());
+    public void removeClient(String address) {
+        if (address == null || address.isBlank()) {
+            logger.warn("ignoring address due is empty or null");
+            return;
         }
 
-        session.close();
+        synchronized (clients) {
+            ClientSession clientSession = clients.values().stream().map(session -> {
+                        if (session.getRemoteAddress().equalsIgnoreCase(address)) {
+                            return session;
+                        }
+
+                        return null;
+                    })
+                    .filter(Objects::nonNull)
+                    .findFirst().orElse(null);
+
+            if (clientSession == null) {
+                logger.error("Failed finding the client associated to {} address", address);
+                return;
+            }
+
+            removeClient(clientSession);
+        }
+    }
+
+    private void removeClient(ClientSession session) {
+        synchronized (clients) {
+            if (session.close()) {
+                clients.remove(session.getId());
+            }
+        }
     }
 
     public boolean isRunning() {

@@ -1,6 +1,7 @@
 package io.github.gfmois.connlab.ui.controller;
 
 import io.github.gfmois.connlab.app.AppSettings;
+import io.github.gfmois.connlab.core.server.ClientSession;
 import io.github.gfmois.connlab.core.server.ServerEvent;
 import io.github.gfmois.connlab.model.ClientRow;
 import io.github.gfmois.connlab.model.Configuration;
@@ -99,6 +100,9 @@ public class ConnLabController implements Initializable {
 
     @FXML
     private TableColumn<ClientRow, String> clientAddressColumn;
+
+    @FXML
+    private TableColumn<ClientRow, Void> actionColumn;
 
     @FXML
     private ListView<String> logsListView;
@@ -285,6 +289,26 @@ public class ConnLabController implements Initializable {
 
         clientIdColumn.setCellValueFactory(data -> data.getValue().idProperty().asObject());
         clientAddressColumn.setCellValueFactory(data -> data.getValue().addressProperty());
+        actionColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button btn = new Button("Kick");
+
+            {
+                btn.setOnAction(e -> {
+                    ClientRow clientRow = getTableView().getItems().get(getIndex());
+                    tcpServerService.kickClient(clientRow.getAddress());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
+        });
 
         searchField.textProperty().addListener(searchConfigurationListener);
         configurationsListView.getSelectionModel().selectedItemProperty().addListener(configurationListSelectionListener);

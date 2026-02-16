@@ -1,9 +1,6 @@
 package io.github.gfmois.connlab.service;
 
-import io.github.gfmois.connlab.core.server.RetryLimitExceededException;
-import io.github.gfmois.connlab.core.server.ServerEvent;
-import io.github.gfmois.connlab.core.server.ServerEventListener;
-import io.github.gfmois.connlab.core.server.TcpServer;
+import io.github.gfmois.connlab.core.server.*;
 import io.github.gfmois.connlab.model.Configuration;
 import io.github.gfmois.connlab.model.Message;
 import io.github.gfmois.connlab.model.response.ResponseMessagePart;
@@ -13,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,9 +23,10 @@ public class TcpServerService implements ServerEventListener {
 
     @Override
     public void onServerEvent(ServerEvent event) {
-        switch (event.getType()) {
-            case MESSAGE_RECEIVED -> handleIncomingMessage(event);
-            default -> publish(event);
+        if (Objects.requireNonNull(event.getType()) == ServerEventType.MESSAGE_RECEIVED) {
+            handleIncomingMessage(event);
+        } else {
+            publish(event);
         }
     }
 
@@ -199,5 +198,14 @@ public class TcpServerService implements ServerEventListener {
         }
 
         return sb.toString();
+    }
+
+    public void kickClient(String address) {
+        if (address == null || address.isBlank()) {
+            logger.warn("Cannot kick client due address is null or blank");
+            return;
+        }
+
+        server.removeClient(address);
     }
 }
