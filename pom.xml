@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.gfmois</groupId>
-    <artifactId>labtcp</artifactId>
-    <version>1.1.2</version>
-    <name>labtcp</name>
+    <artifactId>connlab</artifactId>
+    <version>1.1.3</version>
+    <name>connlab</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -16,7 +16,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <junit.version>5.12.1</junit.version>
         <javafx.version>21.0.6</javafx.version>
-        <main.class>io.github.gfmois.labtcp.Launcher</main.class>
+        <main.class>io.github.gfmois.connlab.Launcher</main.class>
     </properties>
 
     <dependencies>
@@ -133,9 +133,9 @@
                             <goal>jpackage</goal>
                         </goals>
                         <configuration>
-                            <name>LabTCP</name>
+                            <name>ConnLab</name>
                             <type>MSI</type>
-                            <mainJar>labtcp-${version}.jar</mainJar>
+                            <mainJar>connlab-${version}.jar</mainJar>
                             <icon>${project.basedir}/src/main/resources/favicon.ico</icon>
                             <mainClass>${main.class}</mainClass>
                             <input>${project.build.directory}/libs</input>
