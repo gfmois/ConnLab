@@ -38,10 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnLabController implements Initializable {
@@ -55,6 +52,7 @@ public class ConnLabController implements Initializable {
     private List<String> configurationNames = new ArrayList<>();
     private final AtomicInteger nextClientId = new AtomicInteger(1);
     private final PlatformActions platform;
+    private final Map<String, Set<String>> logsMap = new HashMap<>();
 
     private final Timeline uptimeTimeLine;
 
@@ -124,16 +122,17 @@ public class ConnLabController implements Initializable {
         this.configurationService = new ConfigurationService();
         this.platform = PlatformFactory.create();
 
-        this.uptimeTimeLine = new Timeline(
-                new KeyFrame(Duration.ZERO, e -> updateUptimeLabel()),
-                new KeyFrame(Duration.seconds(1))
-        );
+        this.uptimeTimeLine = new Timeline(new KeyFrame(Duration.ZERO, e -> updateUptimeLabel()), new KeyFrame(Duration.seconds(1)));
         uptimeTimeLine.setCycleCount(Animation.INDEFINITE);
     }
 
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+            logsMap.computeIfAbsent(s, k -> new HashSet<>());
+            logsMap.get(s).addAll(logs);
+            logs.clear(); // clear logs
+
             String selectedConfigurationName = configurationsListView.getSelectionModel().getSelectedItem();
             Configuration selectedConfiguration = getConfiguration(selectedConfigurationName);
 
@@ -142,6 +141,9 @@ public class ConnLabController implements Initializable {
             startServerBtn.setVisible(true);
             startServerBtn.setManaged(true);
             configurationDetailsController.showConfiguration(selectedConfiguration);
+
+            logsMap.computeIfAbsent(selectedConfigurationName, k -> new HashSet<>());
+            logs.setAll(logsMap.get(selectedConfigurationName));
         }
     };
 
@@ -156,9 +158,7 @@ public class ConnLabController implements Initializable {
                 return;
             }
 
-            List<String> foundConfigurations = configurationNames.stream()
-                    .filter(conf -> conf.startsWith(value))
-                    .toList();
+            List<String> foundConfigurations = configurationNames.stream().filter(conf -> conf.startsWith(value)).toList();
 
             logger.debug("Found {} configurations.", foundConfigurations);
             configurationsListView.getItems().clear();
@@ -197,10 +197,7 @@ public class ConnLabController implements Initializable {
     }
 
     private Configuration getConfiguration(String selectedConfigurationName) {
-        Configuration selectedConfiguration = configurations.stream()
-                .filter(c -> c.getName().equals(selectedConfigurationName))
-                .findFirst()
-                .orElse(null);
+        Configuration selectedConfiguration = configurations.stream().filter(c -> c.getName().equals(selectedConfigurationName)).findFirst().orElse(null);
         if (selectedConfiguration == null) {
             throw new IllegalArgumentException("Configuration name is null");
         }
@@ -408,9 +405,7 @@ public class ConnLabController implements Initializable {
 
     private void handleServerEvent(ServerEvent event) {
         DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SS");
-        String ts = event.getTimestamp()
-                .atZone(ZoneId.systemDefault())
-                .format(FMT);
+        String ts = event.getTimestamp().atZone(ZoneId.systemDefault()).format(FMT);
 
         switch (event.getType()) {
             case STARTED -> {
@@ -442,9 +437,7 @@ public class ConnLabController implements Initializable {
     }
 
     private void removeClientRow(ServerEvent clientDisconnectedEvent) {
-        clientsTable.getItems().removeIf(
-                client -> client.getAddress().equals(clientDisconnectedEvent.getRemoteAddress())
-        );
+        clientsTable.getItems().removeIf(client -> client.getAddress().equals(clientDisconnectedEvent.getRemoteAddress()));
     }
 
     private void updateUptimeLabel() {
