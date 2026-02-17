@@ -322,8 +322,6 @@ public class ConnLabController implements Initializable {
         configurationDetails.visibleProperty().bind(hasSelectedConfig);
         configurationDetails.managedProperty().bind(hasSelectedConfig);
 
-//        startServerBtn.visibleProperty().bind(hasSelectedConfig);
-//        startServerBtn.managedProperty().bind(hasSelectedConfig);
         startServerBtn.setVisible(false);
         startServerBtn.setManaged(false);
 
@@ -382,10 +380,10 @@ public class ConnLabController implements Initializable {
         configurationNames = configurations.stream().map(Configuration::getName).toList();
         configurationsListView.getItems().addAll(configurationNames);
 
-//        if (!configurationsListView.getItems().isEmpty()) {
-//            configurationsListView.getSelectionModel().selectFirst();
-//        hasSelectedConfig.set(true);
-//        }
+        if (!configurationsListView.getItems().isEmpty()) {
+            configurationsListView.getSelectionModel().selectFirst();
+            hasSelectedConfig.set(true);
+        }
     }
 
     private void setupLogs() {
