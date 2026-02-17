@@ -45,12 +45,15 @@
                 </center>
 
                 <bottom>
-                    <HBox alignment="CENTER_RIGHT" managed="false" spacing="10" visible="false"
+                    <HBox alignment="CENTER_RIGHT"  spacing="10"
                           fx:id="startListeningWrapper">
                         <padding>
                             <Insets bottom="10" left="10" right="10" top="10"/>
                         </padding>
 
+                        <Button fx:id="openConfigurationsFolder" style="-fx-font-size: 14px; -fx-padding: 10 20;"
+                                text="Open configurations folder"
+                                onAction="#onOpenConfigurationsFolderCLicked"/>
                         <Button fx:id="startServerBtn" style="-fx-font-size: 14px; -fx-padding: 10 20;"
                                 text="Start server"
                                 onAction="#onStartServerClicked"/>

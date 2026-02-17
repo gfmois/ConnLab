@@ -5,6 +5,8 @@ import io.github.gfmois.connlab.core.server.ClientSession;
 import io.github.gfmois.connlab.core.server.ServerEvent;
 import io.github.gfmois.connlab.model.ClientRow;
 import io.github.gfmois.connlab.model.Configuration;
+import io.github.gfmois.connlab.platform.PlatformActions;
+import io.github.gfmois.connlab.platform.PlatformFactory;
 import io.github.gfmois.connlab.service.AppSettingsService;
 import io.github.gfmois.connlab.service.ConfigurationService;
 import io.github.gfmois.connlab.service.TcpServerService;
@@ -32,6 +34,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,6 +54,7 @@ public class ConnLabController implements Initializable {
     private List<Configuration> configurations = new ArrayList<>();
     private List<String> configurationNames = new ArrayList<>();
     private final AtomicInteger nextClientId = new AtomicInteger(1);
+    private final PlatformActions platform;
 
     private final Timeline uptimeTimeLine;
 
@@ -73,6 +78,9 @@ public class ConnLabController implements Initializable {
 
     @FXML
     private Button stopServerBtn;
+
+    @FXML
+    private Button openConfigurationsFolder;
 
     @FXML
     private ConfigurationDetailsController configurationDetailsController;
@@ -114,6 +122,7 @@ public class ConnLabController implements Initializable {
         this.tcpServerService = new TcpServerService();
         this.appSettingsService = new AppSettingsService();
         this.configurationService = new ConfigurationService();
+        this.platform = PlatformFactory.create();
 
         this.uptimeTimeLine = new Timeline(
                 new KeyFrame(Duration.ZERO, e -> updateUptimeLabel()),
@@ -130,6 +139,8 @@ public class ConnLabController implements Initializable {
 
             logger.debug("Selected configuration with name: {}", selectedConfigurationName);
             hasSelectedConfig.set(true);
+            startServerBtn.setVisible(true);
+            startServerBtn.setManaged(true);
             configurationDetailsController.showConfiguration(selectedConfiguration);
         }
     };
@@ -237,6 +248,36 @@ public class ConnLabController implements Initializable {
     }
 
     @FXML
+    private void onOpenConfigurationsFolderCLicked() {
+        if (this.platform == null) {
+            // TODO: Show popup with the error
+            logger.error("cannot open explorer because platform is null");
+            return;
+        }
+
+        try {
+            String configurationsPathStr = this.appSettingsService.getAppSettings().getConfigurationsPath();
+            if (configurationsPathStr == null || configurationsPathStr.isBlank()) {
+                // TODO: Show popup with the error
+                logger.error("Error while trying to recover the configurations path, it is {}", configurationsPathStr);
+                return;
+            }
+
+            Path configurationsPath = Path.of(configurationsPathStr);
+            if (!Files.exists(configurationsPath)) {
+                // TODO: Show popup with the error
+                logger.error("Path does not exists: {}", configurationsPath);
+                return;
+            }
+
+            this.platform.openFileExplorer(configurationsPath);
+        } catch (IOException e) {
+            // TODO: Show popup with the error
+            logger.error("Error while trying to open the explorer", e);
+        }
+    }
+
+    @FXML
     private void onStopServerClicked() {
         try {
             tcpServerService.stop();
@@ -281,8 +322,8 @@ public class ConnLabController implements Initializable {
         configurationDetails.visibleProperty().bind(hasSelectedConfig);
         configurationDetails.managedProperty().bind(hasSelectedConfig);
 
-        startListeningWrapper.visibleProperty().bind(hasSelectedConfig);
-        startListeningWrapper.managedProperty().bind(hasSelectedConfig);
+        startServerBtn.setVisible(false);
+        startServerBtn.setManaged(false);
 
         setupLogs();
         startServerListener();
@@ -338,6 +379,11 @@ public class ConnLabController implements Initializable {
         configurations = configurationService.getAll();
         configurationNames = configurations.stream().map(Configuration::getName).toList();
         configurationsListView.getItems().addAll(configurationNames);
+
+        if (!configurationsListView.getItems().isEmpty()) {
+            configurationsListView.getSelectionModel().selectFirst();
+            hasSelectedConfig.set(true);
+        }
     }
 
     private void setupLogs() {
