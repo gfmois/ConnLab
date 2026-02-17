@@ -1,0 +1,105 @@
+name: CI (Qodana + Bump patch)
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [ "dev" ]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: ci-dev
+  cancel-in-progress: false
+
+jobs:
+  qodana:
+    name: Qodana Scan
+    runs-on: ubuntu-latest
+
+    if: >
+      github.event_name != 'push' ||
+      !contains(github.event.head_commit.message, '[skip ci]')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2025.3
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          pr-mode: false
+          use-caches: true
+          post-pr-comment: true
+          use-annotations: true
+          upload-result: false
+          push-fixes: "none"
+
+  bump_patch:
+    name: Bump Maven patch version
+    runs-on: ubuntu-latest
+    needs: [ qodana ]
+
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/dev' &&
+      !contains(github.event.head_commit.message, '[skip ci]')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Compute next patch version
+        id: ver
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          CURRENT_VERSION="$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version | tr -d '[:space:]')"
+          IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+
+          NEW_PATCH=$((patch + 1))
+          NEW_VERSION="${major}.${minor}.${NEW_PATCH}"
+
+          echo "current=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "next=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update pom.xml version
+        shell: bash
+        run: |
+          set -euo pipefail
+          mvn -B versions:set -DnewVersion="${{ steps.ver.outputs.next }}" -DgenerateBackupPoms=false
+          git add pom.xml
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: bump version to ${{ steps.ver.outputs.next }} [skip ci]"
+          git push origin HEAD:dev
