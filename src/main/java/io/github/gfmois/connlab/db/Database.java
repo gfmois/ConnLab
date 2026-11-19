@@ -19,25 +19,28 @@ public class Database {
     private Database() {
     }
 
-    public static void init() {
+    public static synchronized void init() {
         if (url != null) {
             logger.info("Database is already initialized.");
             return;
         }
 
-        try {
-            Path dbPath = AppPaths.getDatabasePath();
-            url = String.format("jdbc:sqlite:%s", dbPath);
+        init(AppPaths.getDatabasePath());
+    }
 
-            // Establish connection
-            try (Connection connection = DriverManager.getConnection(url)) {
-                logger.info("Database connection established to {}", dbPath);
-                createSchema(connection);
-            }
-
+    /**
+     * Initializes the database at the given file, creating or migrating the schema.
+     * Replaces any previously initialized database.
+     */
+    public static synchronized void init(Path dbPath) {
+        String newUrl = String.format("jdbc:sqlite:%s", dbPath);
+        try (Connection connection = DriverManager.getConnection(newUrl)) {
+            logger.info("Database connection established to {}", dbPath);
+            createSchema(connection);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
+        url = newUrl;
     }
 
     private static void createSchema(Connection connection) throws SQLException {

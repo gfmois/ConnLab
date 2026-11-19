@@ -25,10 +25,16 @@ public class ClientSession implements Runnable {
 
     private final Object ioLock = new Object();
 
-    public ClientSession(Socket socket, TcpServer tcpServer) {
+    /**
+     * The streams are opened here, before the session is published, so the server can send
+     * to the client as soon as it is connected (not only once {@link #run()} has started).
+     */
+    public ClientSession(Socket socket, TcpServer tcpServer) throws IOException {
         this.id = UUID.randomUUID().toString();
         this.socket = socket;
         this.server = tcpServer;
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        this.out = socket.getOutputStream();
     }
 
     public String getId() {
@@ -47,12 +53,10 @@ public class ClientSession implements Runnable {
     public void run() {
         logger.debug("Client session {} started", id);
 
+        BufferedReader reader = in;
         try {
-            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            this.out = socket.getOutputStream();
-
             String line;
-            while (running && (line = in.readLine()) != null) {
+            while (running && reader != null && (line = reader.readLine()) != null) {
                 logger.debug("Received from {}: {}", id, line);
                 server.onMessageReceived(this, line);
             }
