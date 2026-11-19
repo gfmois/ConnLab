@@ -1,0 +1,101 @@
+name: Release (Windows MSI)
+
+# Builds the Windows installer with jpackage, which needs Windows and WiX 3, so it runs on a
+# GitHub-hosted Windows runner instead of the self-hosted Linux one.
+#  - push to main: builds the MSI and publishes the GitHub release v<pom version>, unless that tag already exists
+#  - pull requests that change the packaging: only builds the MSI and keeps it as a workflow artifact
+#  - manual run: same as a push to main
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    paths:
+      - "pom.xml"
+      - ".github/workflows/release.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  WIX_VERSION: "3.14.1"
+
+jobs:
+  msi:
+    name: Build MSI
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Install WiX 3
+        shell: pwsh
+        run: |
+          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
+            choco install wixtoolset --version $env:WIX_VERSION -y --no-progress
+            $bin = Get-ChildItem "${env:ProgramFiles(x86)}" -Directory -Filter "WiX Toolset v3*" |
+                Sort-Object Name -Descending | Select-Object -First 1
+            if (-not $bin) { throw "WiX was not installed" }
+            Add-Content $env:GITHUB_PATH (Join-Path $bin.FullName "bin")
+          }
+
+      - name: Read version
+        id: ver
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version | tr -d '[:space:]')"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether the release exists
+        id: exists
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.ver.outputs.tag }}" > /dev/null 2>&1; then
+            echo "Release ${{ steps.ver.outputs.tag }} already exists"
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the installer
+        if: github.event_name == 'pull_request' || steps.exists.outputs.release == 'false'
+        shell: bash
+        run: ./mvnw -B install
+
+      - name: Keep the installer
+        if: github.event_name == 'pull_request' || steps.exists.outputs.release == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ConnLab-${{ steps.ver.outputs.version }}-msi
+          path: target/dist/*.msi
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish the release
+        if: github.event_name != 'pull_request' && steps.exists.outputs.release == 'false'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ steps.ver.outputs.tag }}" target/dist/*.msi \
+            --target "${{ github.sha }}" \
+            --title "ConnLab ${{ steps.ver.outputs.version }}" \
+            --generate-notes
