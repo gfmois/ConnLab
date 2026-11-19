@@ -176,6 +176,30 @@ class TcpServerServiceTest {
     }
 
     @Test
+    void reloadingChangesTheRepliesWithoutDisconnectingClients() throws IOException {
+        start(configuration(true, message("ping", "^ping$", text("old"))));
+
+        try (TestClient client = connect()) {
+            client.send("ping");
+            assertEquals("old", client.readLine());
+
+            Configuration updated = configuration(true, message("ping", "^ping$", text("new")));
+            assertTrue(service.reloadConfiguration(updated));
+            client.send("ping");
+
+            assertEquals("new", client.readLine());
+            assertSame(updated, service.getActiveConfiguration());
+            assertEquals(1, events.ofType(STARTED).size());
+        }
+    }
+
+    @Test
+    void reloadingWhileStoppedDoesNothing() {
+        assertFalse(service.reloadConfiguration(configuration(true)));
+        assertNull(service.getActiveConfiguration());
+    }
+
+    @Test
     void operationsWhileStoppedAreNoOps() {
         assertFalse(service.isRunning());
         assertEquals(0, service.getUptimeMillis());
