@@ -4,6 +4,7 @@ package io.github.gfmois.connlab.db;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -41,14 +42,41 @@ public class Database {
 
     private static void createSchema(Connection connection) throws SQLException {
         try (Statement st = connection.createStatement()) {
-            st.executeUpdate("""                    
+            st.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS app_settings (
                         id INTEGER PRIMARY KEY CHECK (id = 1),
                         configurations_path TEXT NOT NULL,
+                        last_opened_configuration_id INTEGER,
                         max_log_lines INTEGER NOT NULL
                     );
                     """);
         }
+
+        migrate(connection);
+    }
+
+    /**
+     * Brings databases created by older versions up to date with the current schema.
+     */
+    private static void migrate(Connection connection) throws SQLException {
+        if (!columnExists(connection, "app_settings", "last_opened_configuration_id")) {
+            logger.info("Migrating database: adding column app_settings.last_opened_configuration_id");
+            try (Statement st = connection.createStatement()) {
+                st.executeUpdate("ALTER TABLE app_settings ADD COLUMN last_opened_configuration_id INTEGER");
+            }
+        }
+    }
+
+    private static boolean columnExists(Connection connection, String table, String column) throws SQLException {
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery("PRAGMA table_info(" + table + ")")) {
+            while (rs.next()) {
+                if (column.equalsIgnoreCase(rs.getString("name"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static Connection getConnection() throws SQLException {
