@@ -92,7 +92,7 @@ public class ClientSession implements Runnable {
     }
 
     private boolean shutdown(String reason) {
-        if (!closed.compareAndExchange(false, true)) {
+        if (!closed.compareAndSet(false, true)) {
             return false;
         }
 
@@ -110,7 +110,7 @@ public class ClientSession implements Runnable {
                 logger.debug("error while trying to closed input for {} ({})", id, getRemoteAddress(), ex);
             }
             try {
-                socket.shutdownInput();
+                socket.shutdownOutput();
             } catch (IOException ex) {
                 logger.debug("error while trying to close output for {} ({})", id, getRemoteAddress(), ex);
             }

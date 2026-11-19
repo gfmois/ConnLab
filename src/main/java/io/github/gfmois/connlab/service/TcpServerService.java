@@ -14,12 +14,13 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class TcpServerService implements ServerEventListener {
     private static final Logger logger = LogManager.getLogger(TcpServerService.class);
     private final List<ServerEventListener> listeners = new CopyOnWriteArrayList<>();
-    private TcpServer server;
-    private Configuration activeConfiguration;
+    private volatile TcpServer server;
+    private volatile Configuration activeConfiguration;
 
     @Override
     public void onServerEvent(ServerEvent event) {
@@ -72,13 +73,15 @@ public class TcpServerService implements ServerEventListener {
     }
 
     public boolean isRunning() {
-        return server != null && server.isRunning();
+        TcpServer current = server;
+        return current != null && current.isRunning();
     }
 
     public void sendToClient(String connectionId, String message) {
-        if (server != null && server.isRunning()) {
+        TcpServer current = server;
+        if (current != null && current.isRunning()) {
             try {
-                server.sendToClient(connectionId, message);
+                current.sendToClient(connectionId, message);
             } catch (RetryLimitExceededException e) {
                 logger.error("Error while sending the message {} to client {}", message, connectionId);
             }
@@ -86,8 +89,9 @@ public class TcpServerService implements ServerEventListener {
     }
 
     public void broadcast(String message, boolean showLog) {
-        if (server != null && server.isRunning()) {
-            server.broadcast(message, showLog);
+        TcpServer current = server;
+        if (current != null && current.isRunning()) {
+            current.broadcast(message, showLog);
         }
     }
 
@@ -96,19 +100,23 @@ public class TcpServerService implements ServerEventListener {
     }
 
     public long getUptimeMillis() {
-        return server.getUptimeMillis();
+        TcpServer current = server;
+        return current != null ? current.getUptimeMillis() : 0;
     }
 
     private void handleIncomingMessage(ServerEvent event) {
         publish(event); // For the UI
 
-        if (activeConfiguration == null) {
+        // Snapshot both fields: stop() may null them from another thread while we are handling the message
+        TcpServer currentServer = server;
+        Configuration configuration = activeConfiguration;
+        if (currentServer == null || configuration == null) {
             logger.debug("No active configuration, ignoring message");
             return;
         }
 
-        if (!activeConfiguration.isHasToRespond()) {
-            logger.debug("Configuration '{}' is set to not respond, ignoring", activeConfiguration.getName());
+        if (!configuration.isHasToRespond()) {
+            logger.debug("Configuration '{}' is set to not respond, ignoring", configuration.getName());
             return;
         }
 
@@ -117,7 +125,7 @@ public class TcpServerService implements ServerEventListener {
             return;
         }
 
-        Message matchedMessage = findMatchingMessage(incoming);
+        Message matchedMessage = findMatchingMessage(configuration, incoming);
         if (matchedMessage == null) {
             logger.debug("No message pattern matched for incoming: {}", incoming);
             return;
@@ -132,18 +140,18 @@ public class TcpServerService implements ServerEventListener {
         logger.info("Built response '{}' for incoming message '{}'", response, incoming);
 
         if (matchedMessage.isBroadcast()) {
-            server.broadcast(response, false);
+            currentServer.broadcast(response, false);
         } else {
             try {
-                server.sendToClient(event.getConnectionId(), response);
+                currentServer.sendToClient(event.getConnectionId(), response);
             } catch (RetryLimitExceededException e) {
                 logger.error("Error while trying to send the message {} to client {}", response, event.getConnectionId(), e);
             }
         }
     }
 
-    private Message findMatchingMessage(String incoming) {
-        List<Message> messages = activeConfiguration.getMessages();
+    private Message findMatchingMessage(Configuration configuration, String incoming) {
+        List<Message> messages = configuration.getMessages();
         if (messages == null || messages.isEmpty()) {
             logger.info("Active configuration does not have messages");
             return null;
@@ -156,9 +164,15 @@ public class TcpServerService implements ServerEventListener {
                 continue;
             }
 
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(incoming);
+            Pattern pattern;
+            try {
+                pattern = Pattern.compile(regex);
+            } catch (PatternSyntaxException e) {
+                logger.error("Invalid regex '{}' in message '{}', skipping it: {}", regex, msg.getTitle(), e.getDescription());
+                continue;
+            }
 
+            Matcher matcher = pattern.matcher(incoming);
             if (matcher.matches()) {
                 logger.debug("Incoming '{}' matched regex '{}' for message", incoming, regex);
                 return msg;
@@ -206,6 +220,9 @@ public class TcpServerService implements ServerEventListener {
             return;
         }
 
-        server.removeClient(address);
+        TcpServer current = server;
+        if (current != null) {
+            current.removeClient(address);
+        }
     }
 }

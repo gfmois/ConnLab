@@ -78,13 +78,17 @@ public class TcpServer {
         } catch (IOException ignored) {
         }
 
+        // Iterate over a snapshot: stopping a session removes it from the map (onClientDisconnected)
+        List<ClientSession> snapshot;
         synchronized (clients) {
-            for (ClientSession client : clients.values()) {
-                client.stop();
-            }
-
-            clients.clear();
+            snapshot = new ArrayList<>(clients.values());
         }
+
+        for (ClientSession client : snapshot) {
+            client.stop();
+        }
+
+        clients.clear();
 
         publish(ServerEvent.stoped());
     }
