@@ -2,24 +2,18 @@ name: Release (Windows MSI)
 
 # Builds the Windows installer with jpackage, which needs Windows and WiX 3, so it runs on a
 # self-hosted Windows runner (labels: self-hosted, windows, connlab) instead of the Linux one.
-#  - push to main: builds the MSI and publishes the GitHub release v<pom version>, unless that tag already exists
-#  - pull requests that change the packaging: only builds the MSI and keeps it as a workflow artifact
-#  - manual run: same as a push to main
+# On every push to main it builds the MSI and publishes the GitHub release v<pom version>,
+# unless that release already exists.
 
 on:
-  workflow_dispatch:
   push:
     branches: [ "main" ]
-  pull_request:
-    paths:
-      - "pom.xml"
-      - ".github/workflows/release.yml"
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 env:
@@ -78,21 +72,12 @@ jobs:
           fi
 
       - name: Build the installer
-        if: github.event_name == 'pull_request' || steps.exists.outputs.release == 'false'
+        if: steps.exists.outputs.release == 'false'
         shell: bash
         run: ./mvnw -B install
 
-      - name: Keep the installer
-        if: github.event_name == 'pull_request' || steps.exists.outputs.release == 'false'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ConnLab-${{ steps.ver.outputs.version }}-msi
-          path: target/dist/*.msi
-          if-no-files-found: error
-          retention-days: 14
-
       - name: Publish the release
-        if: github.event_name != 'pull_request' && steps.exists.outputs.release == 'false'
+        if: steps.exists.outputs.release == 'false'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
