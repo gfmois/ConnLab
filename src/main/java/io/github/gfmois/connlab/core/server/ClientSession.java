@@ -92,7 +92,7 @@ public class ClientSession implements Runnable {
     }
 
     private boolean shutdown(String reason) {
-        if (!closed.compareAndExchange(false, true)) {
+        if (!closed.compareAndSet(false, true)) {
             return false;
         }
 
