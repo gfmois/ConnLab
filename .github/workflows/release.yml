@@ -1,12 +1,12 @@
 name: Release (Windows MSI)
 
 # Builds the Windows installer with jpackage, which needs Windows and WiX 3, so it runs on a
-# self-hosted Windows runner (labels: self-hosted, windows, connlab) instead of the Linux one.
+# GitHub-hosted Windows runner (the self-hosted one is Linux only).
 # On every push to main it builds the MSI and publishes the GitHub release v<pom version>,
 # unless that release already exists.
 #
-# The steps use Windows PowerShell and the GitHub REST API only, so the runner can run as a
-# Windows service without Git Bash, PowerShell 7 or the gh CLI on its PATH.
+# The steps use Windows PowerShell and the GitHub REST API only, so they do not depend on
+# Git Bash, PowerShell 7 or the gh CLI being on the PATH.
 
 on:
   push:
@@ -29,7 +29,7 @@ defaults:
 jobs:
   msi:
     name: Build MSI
-    runs-on: [ self-hosted, windows, connlab ]
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
