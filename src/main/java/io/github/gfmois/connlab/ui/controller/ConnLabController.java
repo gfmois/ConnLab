@@ -44,7 +44,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnLabController implements Initializable {
     private static final Logger logger = LogManager.getLogger(ConnLabController.class);
     private final BooleanProperty hasSelectedConfig = new SimpleBooleanProperty(false);
-    private final ObservableList<String> logs = FXCollections.observableArrayList();
     private final AppSettingsService appSettingsService;
     private final ConfigurationService configurationService;
     private final TcpServerService tcpServerService;
@@ -52,7 +51,9 @@ public class ConnLabController implements Initializable {
     private List<String> configurationNames = new ArrayList<>();
     private final AtomicInteger nextClientId = new AtomicInteger(1);
     private final PlatformActions platform;
-    private final Map<String, Set<String>> logsMap = new HashMap<>();
+    private final Map<String, ObservableList<String>> logsByConfiguration = new HashMap<>();
+    private String runningConfigurationName;
+    private int maxLogLines = 1000;
 
     private final Timeline uptimeTimeLine;
 
@@ -128,43 +129,41 @@ public class ConnLabController implements Initializable {
 
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
         @Override
-        public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-            logsMap.computeIfAbsent(s, k -> new HashSet<>());
-            logsMap.get(s).addAll(logs);
-            logs.clear(); // clear logs
-
-            String selectedConfigurationName = configurationsListView.getSelectionModel().getSelectedItem();
-            Configuration selectedConfiguration = getConfiguration(selectedConfigurationName);
-
-            logger.debug("Selected configuration with name: {}", selectedConfigurationName);
-            hasSelectedConfig.set(true);
-            startServerBtn.setVisible(true);
-            startServerBtn.setManaged(true);
-            configurationDetailsController.showConfiguration(selectedConfiguration);
-
-            logsMap.computeIfAbsent(selectedConfigurationName, k -> new HashSet<>());
-            logs.setAll(logsMap.get(selectedConfigurationName));
-        }
-    };
-
-    private final ChangeListener<String> searchConfigurationListener = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-            String value = observableValue.getValue();
-            if (value == null || value.isEmpty()) {
-                configurationsListView.getItems().clear();
-                configurationsListView.getItems().addAll(configurationNames);
-                logger.debug("No value in search input, returning all configurations");
+        public void changed(ObservableValue<? extends String> observableValue, String oldName, String newName) {
+            if (newName == null) {
+                // Selection cleared (e.g. while filtering the list): keep showing the current configuration
                 return;
             }
 
-            List<String> foundConfigurations = configurationNames.stream().filter(conf -> conf.startsWith(value)).toList();
+            Configuration selectedConfiguration = getConfiguration(newName);
+            if (selectedConfiguration == null) {
+                logger.warn("Selected configuration '{}' not found", newName);
+                return;
+            }
 
-            logger.debug("Found {} configurations.", foundConfigurations);
-            configurationsListView.getItems().clear();
-            configurationsListView.getItems().addAll(foundConfigurations);
+            logger.debug("Selected configuration with name: {}", newName);
+            hasSelectedConfig.set(true);
+            updateServerButtons();
+            configurationDetailsController.showConfiguration(selectedConfiguration);
+            logsListView.setItems(logsFor(newName));
         }
     };
+
+    private final ChangeListener<String> searchConfigurationListener = (observable, oldValue, newValue) -> applyConfigurationFilter();
+
+    private void applyConfigurationFilter() {
+        String query = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase(Locale.ROOT);
+        List<String> visible = query.isEmpty()
+                ? configurationNames
+                : configurationNames.stream().filter(name -> name.toLowerCase(Locale.ROOT).contains(query)).toList();
+
+        logger.debug("Filter '{}' matched {} configurations", query, visible.size());
+        String previouslySelected = configurationsListView.getSelectionModel().getSelectedItem();
+        configurationsListView.getItems().setAll(visible);
+        if (previouslySelected != null && visible.contains(previouslySelected)) {
+            configurationsListView.getSelectionModel().select(previouslySelected);
+        }
+    }
 
     private final EventHandler<ActionEvent> changeConfigurationsPathListener = new EventHandler<>() {
         @Override
@@ -184,9 +183,16 @@ public class ConnLabController implements Initializable {
             configurations.addAll(configurationsFound);
 
             configurationNames = configurations.stream().map(Configuration::getName).toList();
+            applyConfigurationFilter();
 
-            configurationsListView.getItems().clear();
-            configurationsListView.getItems().addAll(configurationNames);
+            if (configurationsListView.getSelectionModel().getSelectedItem() == null) {
+                if (configurationsListView.getItems().isEmpty()) {
+                    hasSelectedConfig.set(false);
+                    configurationDetailsController.showConfiguration(null);
+                } else {
+                    configurationsListView.getSelectionModel().selectFirst();
+                }
+            }
         }
     };
 
@@ -196,12 +202,16 @@ public class ConnLabController implements Initializable {
         return getConfiguration(name);
     }
 
-    private Configuration getConfiguration(String selectedConfigurationName) {
-        Configuration selectedConfiguration = configurations.stream().filter(c -> c.getName().equals(selectedConfigurationName)).findFirst().orElse(null);
-        if (selectedConfiguration == null) {
-            throw new IllegalArgumentException("Configuration name is null");
-        }
-        return selectedConfiguration;
+    private Configuration getConfiguration(String configurationName) {
+        if (configurationName == null) return null;
+        return configurations.stream()
+                .filter(c -> configurationName.equals(c.getName()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private ObservableList<String> logsFor(String configurationName) {
+        return logsByConfiguration.computeIfAbsent(configurationName, k -> FXCollections.observableArrayList());
     }
 
     @FXML
@@ -224,23 +234,22 @@ public class ConnLabController implements Initializable {
             return;
         }
 
-        try {
-            if (activeConfiguration.getPort() == 0) {
-                logger.warn("Cannot retrieve selected configuration, using default port");
-                activeConfiguration = new Configuration();
-                activeConfiguration.setPort(8080);
-            }
+        int port = activeConfiguration.getPort();
+        if (port < 1 || port > 65535) {
+            logger.warn("Invalid port {} for configuration '{}'", port, activeConfiguration.getName());
+            new Alert(Alert.AlertType.ERROR, "Invalid port: " + port + ". It must be between 1 and 65535.", ButtonType.OK).showAndWait();
+            return;
+        }
 
+        try {
             String host = Optional.ofNullable(activeConfiguration.getHost()).orElse("0.0.0.0");
-            tcpServerService.start(host, activeConfiguration.getPort(), activeConfiguration);
-            onServerStarted();
-            startServerBtn.setVisible(false);
-            startServerBtn.setManaged(false);
-            stopServerBtn.setVisible(true);
-            stopServerBtn.setManaged(true);
+            runningConfigurationName = activeConfiguration.getName();
+            tcpServerService.start(host, port, activeConfiguration);
         } catch (IOException e) {
             logger.error("Error while trying to start server", e);
+            runningConfigurationName = null;
             onServerError();
+            new Alert(Alert.AlertType.ERROR, "Could not start the server on port " + port + ": " + e.getMessage(), ButtonType.OK).showAndWait();
         }
     }
 
@@ -277,19 +286,28 @@ public class ConnLabController implements Initializable {
     @FXML
     private void onStopServerClicked() {
         try {
+            // The UI is updated when the STOPPED event arrives, after the pending client events
             tcpServerService.stop();
-            startServerBtn.setVisible(true);
-            startServerBtn.setManaged(true);
-            stopServerBtn.setVisible(false);
-            stopServerBtn.setManaged(false);
-            onServerStopped();
         } catch (Exception e) {
             onServerError();
             logger.error("Error while trying to stop the server", e);
         }
     }
 
+    private void updateServerButtons() {
+        boolean running = tcpServerService.isRunning();
+        boolean canStart = !running && hasSelectedConfig.get();
+        startServerBtn.setVisible(canStart);
+        startServerBtn.setManaged(canStart);
+        stopServerBtn.setVisible(running);
+        stopServerBtn.setManaged(running);
+    }
+
     private void onServerStarted() {
+        updateServerButtons();
+        if (runningConfigurationName != null) {
+            configurationsListView.getSelectionModel().select(runningConfigurationName);
+        }
         monitorTab.setDisable(false);
         rightTabPane.getSelectionModel().select(monitorTab);
         serverStatusLabel.setText("RUNNING");
@@ -303,7 +321,10 @@ public class ConnLabController implements Initializable {
         rightTabPane.getSelectionModel().selectFirst();
         uptimeTimeLine.stop();
         serverUptimeLabel.setText("00:00:00");
-        // TODO: Clear clients and restart uptime
+        clientsTable.getItems().clear();
+        nextClientId.set(1);
+        runningConfigurationName = null;
+        updateServerButtons();
     }
 
     private void onServerError() {
@@ -373,6 +394,11 @@ public class ConnLabController implements Initializable {
             appSettingsService.save(selectedPath, null, true);
         }
 
+        Integer configuredMaxLogLines = appSettingsService.getAppSettings().getMaxLogsLines();
+        if (configuredMaxLogLines != null && configuredMaxLogLines > 0) {
+            maxLogLines = configuredMaxLogLines;
+        }
+
         configurations = configurationService.getAll();
         configurationNames = configurations.stream().map(Configuration::getName).toList();
         configurationsListView.getItems().addAll(configurationNames);
@@ -384,7 +410,7 @@ public class ConnLabController implements Initializable {
     }
 
     private void setupLogs() {
-        logsListView.setItems(logs);
+        logsListView.setItems(FXCollections.observableArrayList());
     }
 
     private void startServerListener() {
@@ -394,13 +420,23 @@ public class ConnLabController implements Initializable {
     }
 
     private void appendLog(String line) {
-        AppSettings appSettings = appSettingsService.getAppSettings();
-        if (logs.size() >= appSettings.getMaxLogsLines()) {
-            logs.removeFirst();
+        String target = runningConfigurationName != null
+                ? runningConfigurationName
+                : configurationsListView.getSelectionModel().getSelectedItem();
+        if (target == null) {
+            logger.debug("No configuration to attach log line to: {}", line);
+            return;
         }
 
-        logs.add(line);
-        logsListView.scrollTo(logs.size() - 1);
+        ObservableList<String> lines = logsFor(target);
+        while (lines.size() >= maxLogLines) {
+            lines.removeFirst();
+        }
+        lines.add(line);
+
+        if (logsListView.getItems() == lines) {
+            logsListView.scrollTo(lines.size() - 1);
+        }
     }
 
     private void handleServerEvent(ServerEvent event) {
