@@ -78,6 +78,8 @@ public class ConfigurationDetailsController implements Initializable {
             configurationSelectedName.setText("");
             configurationSelectedDescription.setText("");
             hasToRespondCheckBox.setSelected(false);
+            portField.setText("");
+            showNoMessages();
             return;
         }
 
@@ -149,9 +151,8 @@ public class ConfigurationDetailsController implements Initializable {
                         groupIndex.setPrefWidth(90);
                         groupIndex.setTooltip(new Tooltip("Regex group index"));
 
-                        if (selector.getValue() == ResponseType.MESSAGE_PART) {
-                            int idx = parseIntOrDefault(part.getPartIndex().toString(), 0);
-                            groupIndex.getValueFactory().setValue(idx);
+                        if (selector.getValue() == ResponseType.MESSAGE_PART && part.getPartIndex() != null) {
+                            groupIndex.getValueFactory().setValue(Math.max(0, part.getPartIndex()));
                         }
 
                         StackPane inputPane = new StackPane(textInput, groupIndex);
@@ -168,7 +169,7 @@ public class ConfigurationDetailsController implements Initializable {
                             if (val == ResponseType.STATIC) {
                                 part.setText(textInput.getText());
                             } else {
-                                part.setText(String.valueOf(groupIndex.getValue()));
+                                part.setPartIndex(groupIndex.getValue());
                             }
                         });
 
@@ -180,7 +181,7 @@ public class ConfigurationDetailsController implements Initializable {
 
                         groupIndex.valueProperty().addListener((obs, old, val) -> {
                             if (selector.getValue() == ResponseType.MESSAGE_PART && val != null) {
-                                part.setText(String.valueOf(val));
+                                part.setPartIndex(val);
                             }
                         });
 
@@ -191,9 +192,14 @@ public class ConfigurationDetailsController implements Initializable {
             });
         } else {
             logger.info("Empty messages or null messages on the current configuration");
-            noMessagesLabel.visibleProperty().set(true);
-            noMessagesLabel.managedProperty().set(true);
+            showNoMessages();
         }
+    }
+
+    private void showNoMessages() {
+        noMessagesLabel.setVisible(true);
+        noMessagesLabel.setManaged(true);
+        messagesPane.setContent(noMessagesLabel);
     }
 
     private static void applyInputMode(ResponseType type, TextField textInput, Spinner<Integer> groupIndex) {
@@ -204,16 +210,5 @@ public class ConfigurationDetailsController implements Initializable {
 
         groupIndex.setVisible(isMessagePart);
         groupIndex.setManaged(isMessagePart);
-    }
-
-    private static int parseIntOrDefault(String s, int def) {
-        if (s == null) return def;
-        String t = s.trim();
-        if (t.isEmpty()) return def;
-        try {
-            return Integer.parseInt(t);
-        } catch (NumberFormatException e) {
-            return def;
-        }
     }
 }
