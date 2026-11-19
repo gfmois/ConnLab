@@ -110,7 +110,7 @@ public class ClientSession implements Runnable {
                 logger.debug("error while trying to closed input for {} ({})", id, getRemoteAddress(), ex);
             }
             try {
-                socket.shutdownInput();
+                socket.shutdownOutput();
             } catch (IOException ex) {
                 logger.debug("error while trying to close output for {} ({})", id, getRemoteAddress(), ex);
             }
