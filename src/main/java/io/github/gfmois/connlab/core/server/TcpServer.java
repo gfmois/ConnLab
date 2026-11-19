@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -11,7 +12,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TcpServer {
     private static final Logger logger = LogManager.getLogger(TcpServer.class);
-    private final String host; // NOTE: This is not used
+    /**
+     * The address to listen on; null, blank or 0.0.0.0 listens on every interface.
+     */
+    private final String host;
     private final int port;
     private volatile boolean running = false;
     private long startTime;
@@ -51,11 +55,12 @@ public class TcpServer {
         if (running)
             return;
 
-        serverSocket = new ServerSocket(port);
+        InetAddress bindAddress = host == null || host.isBlank() ? null : InetAddress.getByName(host.trim());
+        serverSocket = new ServerSocket(port, 50, bindAddress);
         running = true;
         startTime = System.nanoTime();
 
-        logger.info("TCP Server started on port: {}", port);
+        logger.info("TCP Server started on {}:{}", bindAddress == null ? "0.0.0.0" : bindAddress.getHostAddress(), getLocalPort());
         publish(ServerEvent.started());
 
         acceptThread = new Thread(this::acceptLoop, "tcp-accept-thread");
@@ -133,6 +138,14 @@ public class TcpServer {
     public void onClientDisconnected(ClientSession session) {
         clients.remove(session.getId());
         publish(ServerEvent.clientDisconnected(session.getId(), session.getRemoteAddress()));
+    }
+
+    /**
+     * @return the remote address of the client with {@code connectionId}, or null when it is not connected
+     */
+    public String getRemoteAddress(String connectionId) {
+        ClientSession session = clients.get(connectionId);
+        return session == null ? null : session.getRemoteAddress();
     }
 
     public void sendToClient(String connectionId, String message) throws RetryLimitExceededException {
@@ -221,6 +234,14 @@ public class TcpServer {
     public int getLocalPort() {
         ServerSocket socket = serverSocket;
         return socket != null ? socket.getLocalPort() : -1;
+    }
+
+    /**
+     * @return the address the server socket listens on (0.0.0.0 for every interface), or null when not started
+     */
+    public String getLocalAddress() {
+        ServerSocket socket = serverSocket;
+        return socket != null ? socket.getInetAddress().getHostAddress() : null;
     }
 
     public Map<String, ClientSession> getClientsSnapshot() {

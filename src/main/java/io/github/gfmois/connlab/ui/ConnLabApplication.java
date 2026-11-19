@@ -33,6 +33,8 @@ public class ConnLabApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Theme.apply();
+
         boolean removeDb = Optional.of(Boolean.parseBoolean(System.getProperty("removeDb"))).orElse(false);
         if (removeDb) {
             appSettingsService.removeAppConfiguration();
@@ -60,6 +62,8 @@ public class ConnLabApplication extends Application {
                 event.consume();
             }
         });
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
         stage.setTitle(String.format("ConnLab - v%s", version));
         stage.setScene(scene);
         stage.show();

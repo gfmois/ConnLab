@@ -1,5 +1,6 @@
 package io.github.gfmois.connlab.ui.controller;
 
+import atlantafx.base.theme.Styles;
 import io.github.gfmois.connlab.core.response.ResponseEngine;
 import io.github.gfmois.connlab.model.Configuration;
 import io.github.gfmois.connlab.model.Message;
@@ -9,7 +10,6 @@ import io.github.gfmois.connlab.service.ConfigurationService;
 import io.github.gfmois.connlab.service.ConfigurationValidator;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -23,6 +23,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +44,6 @@ import java.util.function.Function;
  */
 public class ConfigurationDetailsController implements Initializable {
     private static final KeyCombination SAVE_SHORTCUT = KeyCombination.keyCombination("Shortcut+S");
-    private static final PseudoClass INVALID = PseudoClass.getPseudoClass("invalid");
 
     private final ReadOnlyBooleanWrapper dirty = new ReadOnlyBooleanWrapper(false);
     private final ResponseEngine responseEngine = new ResponseEngine();
@@ -260,9 +262,9 @@ public class ConfigurationDetailsController implements Initializable {
             errors = validator.apply(draft);
         }
 
-        portField.pseudoClassStateChanged(INVALID,
+        portField.pseudoClassStateChanged(Styles.STATE_DANGER,
                 draft != null && (draft.getPort() < 1 || draft.getPort() > 65535));
-        nameField.pseudoClassStateChanged(INVALID,
+        nameField.pseudoClassStateChanged(Styles.STATE_DANGER,
                 draft != null && errors.stream().anyMatch(e -> e.startsWith("The name") || e.startsWith("There is already")));
 
         errorsLabel.setText(String.join("\n", errors.stream().map(e -> "• " + e).toList()));
@@ -341,8 +343,8 @@ public class ConfigurationDetailsController implements Initializable {
         });
 
         HBox header = new HBox(8, number, title, broadcast,
-                moveButton("↑", "Move up", messages, index, -1),
-                moveButton("↓", "Move down", messages, index, 1),
+                moveButton(Feather.ARROW_UP, "Move up", messages, index, -1),
+                moveButton(Feather.ARROW_DOWN, "Move down", messages, index, 1),
                 removeButton("Delete this message", () -> messages.remove(index)));
         header.setAlignment(Pos.CENTER_LEFT);
 
@@ -366,12 +368,15 @@ public class ConfigurationDetailsController implements Initializable {
             parts.getChildren().add(partRow(message, responseBuilder, i));
         }
 
-        Button addText = new Button("+ Text");
+        Button addText = new Button("Text", new FontIcon(Feather.PLUS));
+        addText.getStyleClass().add(Styles.SMALL);
+        addText.setTooltip(new Tooltip("Add fixed text to the reply"));
         addText.setOnAction(e -> {
             responseBuilder.add(staticPart(""));
             renderMessages();
         });
-        Button addGroup = new Button("+ Regex group");
+        Button addGroup = new Button("Regex group", new FontIcon(Feather.PLUS));
+        addGroup.getStyleClass().add(Styles.SMALL);
         addGroup.setTooltip(new Tooltip("Insert the text captured by a group of the regex"));
         addGroup.setOnAction(e -> {
             responseBuilder.add(groupPart(defaultGroup(message)));
@@ -457,15 +462,15 @@ public class ConfigurationDetailsController implements Initializable {
         });
 
         HBox row = new HBox(8, type, input,
-                moveButton("↑", "Move up", parts, index, -1),
-                moveButton("↓", "Move down", parts, index, 1),
+                moveButton(Feather.ARROW_UP, "Move up", parts, index, -1),
+                moveButton(Feather.ARROW_DOWN, "Move down", parts, index, 1),
                 removeButton("Delete this part", () -> parts.remove(index)));
         row.setAlignment(Pos.CENTER_LEFT);
         return row;
     }
 
-    private <T> Button moveButton(String text, String tooltip, List<T> items, int index, int delta) {
-        Button button = smallButton(text, tooltip);
+    private <T> Button moveButton(Ikon icon, String tooltip, List<T> items, int index, int delta) {
+        Button button = smallButton(icon, tooltip);
         int target = index + delta;
         button.setDisable(target < 0 || target >= items.size());
         button.setOnAction(e -> {
@@ -476,7 +481,8 @@ public class ConfigurationDetailsController implements Initializable {
     }
 
     private Button removeButton(String tooltip, Runnable remove) {
-        Button button = smallButton("✕", tooltip);
+        Button button = smallButton(Feather.X, tooltip);
+        button.getStyleClass().add(Styles.DANGER);
         button.setOnAction(e -> {
             remove.run();
             renderMessages();
@@ -484,9 +490,9 @@ public class ConfigurationDetailsController implements Initializable {
         return button;
     }
 
-    private static Button smallButton(String text, String tooltip) {
-        Button button = new Button(text);
-        button.getStyleClass().add("small-button");
+    private static Button smallButton(Ikon icon, String tooltip) {
+        Button button = new Button(null, new FontIcon(icon));
+        button.getStyleClass().addAll(Styles.BUTTON_ICON, Styles.FLAT, Styles.SMALL);
         button.setTooltip(new Tooltip(tooltip));
         button.setFocusTraversable(false);
         return button;
@@ -500,7 +506,7 @@ public class ConfigurationDetailsController implements Initializable {
 
     private static void updateRegexInfo(TextField field, Label info, String regex) {
         String error = ConfigurationValidator.regexError(regex);
-        field.pseudoClassStateChanged(INVALID, error != null);
+        field.pseudoClassStateChanged(Styles.STATE_DANGER, error != null);
         field.setTooltip(error == null ? null : new Tooltip(error));
         if (error != null) {
             info.setText(regex == null || regex.isEmpty() ? "required" : "invalid");
