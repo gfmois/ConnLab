@@ -1,0 +1,26 @@
+# The self-hosted runner of this repository, on the VPS (from .github/runner):
+#
+#   read -rs RUNNER_TOKEN && export RUNNER_TOKEN   # only the first time
+#   docker compose up -d --build
+#   docker compose logs -f
+#
+# The token is on GitHub: Settings → Actions → Runners → New self-hosted
+# runner, the value after --token (it lasts one hour).
+name: connlab-runner          # own project name, so it can live next to other runners
+services:
+  runner:
+    build: .
+    image: connlab-runner
+    restart: unless-stopped
+    init: true                # reaps the processes the jobs leave behind
+    environment:
+      RUNNER_TOKEN: ${RUNNER_TOKEN:-}
+      RUNNER_NAME: ${RUNNER_NAME:-vps-connlab}
+    volumes:
+      - home:/home/runner     # registration, JDK, Qodana and caches
+    # The builds give way to the rest of the VPS.
+    mem_limit: 4g
+    cpus: 2
+    cpu_shares: 512
+volumes:
+  home:
