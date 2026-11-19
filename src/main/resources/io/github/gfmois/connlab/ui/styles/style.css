@@ -1,10 +1,105 @@
+/*
+ * Application styles on top of the AtlantaFX theme. Colors use the theme's looked-up colors
+ * (-color-*) so they work with both the light and the dark theme.
+ */
+
 .message-title {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 8 0 4 0;
 }
 
 .message-meta {
-    -fx-text-fill: #888;
-    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 0.9em;
+}
+
+/* Configuration editor */
+
+.editor-toolbar,
+.action-bar {
+    -fx-border-color: -color-border-default transparent transparent transparent;
+}
+
+.editor-toolbar {
+    -fx-border-color: transparent transparent -color-border-default transparent;
+}
+
+.editor-status {
+    -fx-text-fill: -color-fg-muted;
+}
+
+.editor-errors {
+    -fx-background-color: -color-danger-subtle;
+    -fx-text-fill: -color-danger-fg;
+    -fx-padding: 6 10 6 10;
+}
+
+.editor-scroll,
+.editor-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.config-name-field {
+    -fx-font-size: 1.6em;
+}
+
+.message-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.try-result {
+    -fx-font-family: monospace;
+}
+
+/* Configuration list */
+
+.list-badge {
+    -fx-font-size: 0.85em;
+}
+
+.status-running,
+.status-running .ikonli-font-icon {
+    -fx-text-fill: -color-success-fg;
+    -fx-icon-color: -color-success-fg;
+}
+
+/* Monitor logs */
+
+.logs .list-cell {
+    -fx-font-family: monospace;
+    -fx-padding: 2 8 2 8;
+}
+
+.logs .list-cell.log-info {
+    -fx-text-fill: -color-fg-muted;
+}
+
+.logs .list-cell.log-received {
+    -fx-text-fill: -color-accent-fg;
+}
+
+.logs .list-cell.log-sent {
+    -fx-text-fill: -color-success-fg;
+}
+
+.logs .list-cell.log-error {
+    -fx-text-fill: -color-danger-fg;
+}
+
+.logs .list-cell:selected {
+    -fx-text-fill: -color-fg-default;
+}
+
+/* Status bar */
+
+.status-bar {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default transparent transparent transparent;
+}
+
+.status-bar .label {
+    -fx-font-size: 0.9em;
 }

@@ -3,51 +3,64 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<VBox fx:id="configurationContainer" prefHeight="146.0" prefWidth="193.0" spacing="10" VBox.vgrow="ALWAYS"
+<VBox fx:id="configurationContainer" spacing="0" VBox.vgrow="ALWAYS" styleClass="configuration-editor"
       xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="io.github.gfmois.connlab.ui.controller.ConfigurationDetailsController">
 
-    <Label fx:id="configurationSelectedName" maxWidth="Infinity">
-        <font>
-            <Font size="32.0"/>
-        </font>
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="editor-toolbar">
         <padding>
-            <Insets left="10" right="10" top="5"/>
+            <Insets bottom="8" left="10" right="10" top="8"/>
         </padding>
-    </Label>
+        <Label fx:id="statusLabel" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="editor-status"/>
+        <Button fx:id="discardButton" text="Discard changes" onAction="#onDiscard" disable="true" styleClass="flat"/>
+        <Button fx:id="saveButton" text="Save" onAction="#onSave" disable="true" styleClass="accent">
+            <tooltip>
+                <Tooltip text="Save to the JSON file (Ctrl+S)"/>
+            </tooltip>
+        </Button>
+    </HBox>
 
-    <Label fx:id="configurationSelectedDescription" maxWidth="Infinity" textFill="#0000008c">
-        <font>
-            <Font size="16.0"/>
-        </font>
-        <padding>
-            <Insets bottom="5" left="10" right="10"/>
-        </padding>
-    </Label>
+    <Label fx:id="errorsLabel" maxWidth="Infinity" wrapText="true" styleClass="editor-errors"
+           visible="false" managed="false"/>
 
-    <VBox spacing="10" VBox.vgrow="ALWAYS">
-        <padding>
-            <Insets bottom="10" left="10" right="10" top="10"/>
-        </padding>
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="editor-scroll">
+        <VBox spacing="12">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10"/>
+            </padding>
 
-        <TitledPane text="Connection Settings" collapsible="false">
-            <VBox spacing="10">
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Label text="Port:"/>
-                    <TextField fx:id="portField"
-                               promptText="8080"
-                               maxWidth="100"
-                               prefColumnCount="6"/>
-                </HBox>
-                <CheckBox fx:id="hasToRespondCheckBox" text="Auto respond to received messages"/>
-            </VBox>
-        </TitledPane>
+            <TextField fx:id="nameField" promptText="Configuration name" styleClass="config-name-field"/>
+            <TextField fx:id="descriptionField" promptText="Description (optional)"/>
+            <Label fx:id="fileLabel" styleClass="message-meta"/>
 
-        <TitledPane expanded="true" text="Messages" collapsible="false" fx:id="messagesPane">
-            <Label text="Messages editor coming soon..." textFill="#888" fx:id="noMessagesLabel" />
-        </TitledPane>
-    </VBox>
+            <TitledPane text="Connection" collapsible="false">
+                <VBox spacing="10">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Host:"/>
+                        <TextField fx:id="hostField" promptText="0.0.0.0 (all interfaces)" prefColumnCount="14"/>
+                        <Label text="Port:"/>
+                        <TextField fx:id="portField" promptText="6969" prefColumnCount="6"/>
+                    </HBox>
+                    <CheckBox fx:id="hasToRespondCheckBox" text="Auto respond to received messages"/>
+                </VBox>
+            </TitledPane>
 
+            <TitledPane text="Messages" collapsible="false">
+                <VBox spacing="10">
+                    <Label fx:id="noMessagesLabel" text="This configuration has no messages defined"
+                           styleClass="message-meta"/>
+                    <VBox fx:id="messagesBox" spacing="10"/>
+                    <Button text="Add message" onAction="#onAddMessage"/>
+                </VBox>
+            </TitledPane>
+
+            <TitledPane text="Try it" collapsible="false">
+                <VBox spacing="6">
+                    <TextField fx:id="tryField" promptText="Type a message a client could send, e.g. Hello, Juan"/>
+                    <Label fx:id="tryResultLabel" wrapText="true" styleClass="try-result"/>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </ScrollPane>
 </VBox>

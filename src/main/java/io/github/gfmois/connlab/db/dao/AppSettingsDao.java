@@ -20,8 +20,12 @@ public class AppSettingsDao {
             AppSettings appSettings = new AppSettings();
             if (rs.next()) {
                 appSettings.setConfigurationsPath(rs.getString("configurations_path"));
-                appSettings.setLastConfigurationUsedId(rs.getInt("last_opened_configuration_id"));
-                appSettings.setMaxLogsLines(rs.getInt("max_log_lines"));
+                int lastConfigurationId = rs.getInt("last_opened_configuration_id");
+                appSettings.setLastConfigurationUsedId(rs.wasNull() ? null : lastConfigurationId);
+                int maxLogLines = rs.getInt("max_log_lines");
+                if (maxLogLines > 0) {
+                    appSettings.setMaxLogsLines(maxLogLines);
+                }
             }
 
             return appSettings;

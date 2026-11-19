@@ -3,6 +3,7 @@ package io.github.gfmois.connlab.ui;
 import io.github.gfmois.connlab.app.AppSettings;
 import io.github.gfmois.connlab.service.AppSettingsService;
 import io.github.gfmois.connlab.ui.components.PathDialog;
+import io.github.gfmois.connlab.ui.controller.ConnLabController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -32,6 +33,8 @@ public class ConnLabApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Theme.apply();
+
         boolean removeDb = Optional.of(Boolean.parseBoolean(System.getProperty("removeDb"))).orElse(false);
         if (removeDb) {
             appSettingsService.removeAppConfiguration();
@@ -52,6 +55,15 @@ public class ConnLabApplication extends Application {
 
         Scene scene = new Scene(fxmlLoader.load(), width, height);
         loadAppStyles(scene);
+
+        ConnLabController controller = fxmlLoader.getController();
+        stage.setOnCloseRequest(event -> {
+            if (!controller.confirmUnsavedChanges()) {
+                event.consume();
+            }
+        });
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
         stage.setTitle(String.format("ConnLab - v%s", version));
         stage.setScene(scene);
         stage.show();

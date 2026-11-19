@@ -16,9 +16,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test:
+    name: Tests
+    runs-on: [ self-hosted, linux, connlab ]
+
+    if: >
+      github.event_name != 'push' ||
+      !contains(github.event.head_commit.message, '[skip ci]')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Run tests
+        run: ./mvnw -B test
+
   qodana:
     name: Qodana Scan
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, linux, connlab ]
 
     if: >
       github.event_name != 'push' ||
@@ -30,6 +54,13 @@ jobs:
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
 
       - name: Qodana Scan
         uses: JetBrains/qodana-action@v2025.3
@@ -45,8 +76,8 @@ jobs:
 
   bump_patch:
     name: Bump Maven patch version
-    runs-on: ubuntu-latest
-    needs: [ qodana ]
+    runs-on: [ self-hosted, linux, connlab ]
+    needs: [ test, qodana ]
 
     if: >
       github.event_name == 'push' &&
@@ -63,7 +94,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "21"
           cache: maven
 
       - name: Compute next patch version
@@ -72,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          CURRENT_VERSION="$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version | tr -d '[:space:]')"
+          CURRENT_VERSION="$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version | tr -d '[:space:]')"
           IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
 
           NEW_PATCH=$((patch + 1))
@@ -85,7 +116,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mvn -B versions:set -DnewVersion="${{ steps.ver.outputs.next }}" -DgenerateBackupPoms=false
+          ./mvnw -B versions:set -DnewVersion="${{ steps.ver.outputs.next }}" -DgenerateBackupPoms=false
           git add pom.xml
 
       - name: Commit and push
