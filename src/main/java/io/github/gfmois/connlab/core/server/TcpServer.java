@@ -97,7 +97,19 @@ public class TcpServer {
         try {
             while (running) {
                 Socket socket = serverSocket.accept();
-                ClientSession session = new ClientSession(socket, this);
+                ClientSession session;
+                try {
+                    session = new ClientSession(socket, this);
+                } catch (IOException e) {
+                    // A broken connection must not stop the server from accepting the next ones
+                    logger.warn("Could not open the connection with {}", socket.getRemoteSocketAddress(), e);
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {
+                    }
+                    continue;
+                }
+
                 clients.put(session.getId(), session);
                 publish(ServerEvent.clientConnected(session.getId(), session.getRemoteAddress()));
                 Thread t = new Thread(session, "client-" + session.getId());
