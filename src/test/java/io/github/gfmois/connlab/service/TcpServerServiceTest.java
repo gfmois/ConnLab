@@ -1,5 +1,6 @@
 package io.github.gfmois.connlab.service;
 
+import io.github.gfmois.connlab.core.server.ServerEvent;
 import io.github.gfmois.connlab.model.Configuration;
 import io.github.gfmois.connlab.support.EventRecorder;
 import io.github.gfmois.connlab.support.TestClient;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.github.gfmois.connlab.core.server.ServerEventType.*;
 import static io.github.gfmois.connlab.support.Configs.*;
@@ -190,6 +193,52 @@ class TcpServerServiceTest {
             assertEquals("new", client.readLine());
             assertSame(updated, service.getActiveConfiguration());
             assertEquals(1, events.ofType(STARTED).size());
+        }
+    }
+
+    @Test
+    void automaticRepliesAreReportedAsSent() throws IOException {
+        start(configuration(true, helloMessage()));
+
+        try (TestClient client = connect()) {
+            client.send("Hello, Juan");
+            assertEquals("Bye, Juan!", client.readLine());
+
+            var sent = events.await(MESSAGE_SENT);
+            assertEquals("Bye, Juan!", sent.getMessage());
+            assertEquals(client.address(), sent.getRemoteAddress());
+        }
+    }
+
+    @Test
+    void automaticBroadcastRepliesAreReportedForEveryClient() throws IOException {
+        start(configuration(true, broadcast(helloMessage())));
+
+        try (TestClient sender = connect(); TestClient other = connect()) {
+            sender.send("Hello, Ana");
+            assertEquals("Bye, Ana!", sender.readLine());
+            assertEquals("Bye, Ana!", other.readLine());
+
+            events.await(MESSAGE_SENT, 2);
+            assertEquals(Set.of(sender.address(), other.address()),
+                    events.ofType(MESSAGE_SENT).stream().map(ServerEvent::getRemoteAddress).collect(Collectors.toSet()));
+        }
+    }
+
+    @Test
+    void sendingToOneClientOnlyReachesThatClient() throws IOException {
+        start(configuration(true));
+
+        try (TestClient target = connect(); TestClient other = connect()) {
+            String connectionId = events.ofType(CLIENT_CONNECTED).stream()
+                    .filter(e -> e.getRemoteAddress().equals(target.address()))
+                    .findFirst().orElseThrow().getConnectionId();
+
+            service.sendToClient(connectionId, "only for you");
+
+            assertEquals("only for you", target.readLine());
+            other.assertNothingReceived(SILENCE);
+            assertEquals(target.address(), events.await(MESSAGE_SENT).getRemoteAddress());
         }
     }
 

@@ -101,7 +101,9 @@ public class TcpServerService implements ServerEventListener {
         TcpServer current = server;
         if (current != null && current.isRunning()) {
             try {
+                String address = current.getRemoteAddress(connectionId);
                 current.sendToClient(connectionId, message);
+                publish(ServerEvent.messageSent(connectionId, address, message));
             } catch (RetryLimitExceededException e) {
                 logger.error("Error while sending the message {} to client {}", message, connectionId);
             }
@@ -158,10 +160,11 @@ public class TcpServerService implements ServerEventListener {
         logger.info("Built response '{}' for incoming message '{}'", response, incoming);
 
         if (reply.get().message().isBroadcast()) {
-            currentServer.broadcast(response, false);
+            currentServer.broadcast(response, true);
         } else {
             try {
                 currentServer.sendToClient(event.getConnectionId(), response);
+                publish(ServerEvent.messageSent(event.getConnectionId(), event.getRemoteAddress(), response));
             } catch (RetryLimitExceededException e) {
                 logger.error("Error while trying to send the message {} to client {}", response, event.getConnectionId(), e);
             }

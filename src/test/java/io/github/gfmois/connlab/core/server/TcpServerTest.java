@@ -221,4 +221,38 @@ class TcpServerTest {
             after.await(CLIENT_CONNECTED);
         }
     }
+
+    @Test
+    void listensOnTheConfiguredHost() {
+        assertEquals("127.0.0.1", server.getLocalAddress());
+    }
+
+    @Test
+    void listensOnEveryInterfaceWithoutHost() throws IOException {
+        for (String host : new String[]{null, "", "0.0.0.0"}) {
+            TcpServer everywhere = new TcpServer(host, 0);
+            try {
+                everywhere.start();
+                assertEquals("0.0.0.0", everywhere.getLocalAddress(), "host " + host);
+            } finally {
+                everywhere.stop();
+            }
+        }
+    }
+
+    @Test
+    void anUnknownHostFailsToStart() {
+        TcpServer unknown = new TcpServer("no-such-host.invalid", 0);
+
+        assertThrows(IOException.class, unknown::start);
+        assertFalse(unknown.isRunning());
+    }
+
+    @Test
+    void knowsTheAddressOfEachConnection() throws IOException {
+        try (TestClient client = connect()) {
+            assertEquals(client.address(), server.getRemoteAddress(connectionIdOf(client)));
+            assertNull(server.getRemoteAddress("missing"));
+        }
+    }
 }
