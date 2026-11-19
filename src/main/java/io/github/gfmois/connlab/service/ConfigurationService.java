@@ -17,10 +17,14 @@ import java.util.stream.Stream;
 public class ConfigurationService {
     private static final Logger logger = LogManager.getLogger(ConfigurationService.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static AppSettingsService appSettingsService;
+    private final AppSettingsService appSettingsService;
 
     public ConfigurationService() {
-        appSettingsService = new AppSettingsService();
+        this(new AppSettingsService());
+    }
+
+    public ConfigurationService(AppSettingsService appSettingsService) {
+        this.appSettingsService = appSettingsService;
     }
 
     public List<Configuration> getAll() {

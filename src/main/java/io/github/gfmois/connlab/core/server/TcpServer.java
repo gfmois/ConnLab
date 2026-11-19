@@ -203,6 +203,14 @@ public class TcpServer {
         return running;
     }
 
+    /**
+     * @return the port the server socket is bound to (differs from the requested one when it was 0), or -1 when not started
+     */
+    public int getLocalPort() {
+        ServerSocket socket = serverSocket;
+        return socket != null ? socket.getLocalPort() : -1;
+    }
+
     public Map<String, ClientSession> getClientsSnapshot() {
         synchronized (clients) {
             return new HashMap<>(clients);
