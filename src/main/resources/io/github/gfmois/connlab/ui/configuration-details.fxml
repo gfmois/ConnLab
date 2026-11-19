@@ -13,8 +13,8 @@
             <Insets bottom="8" left="10" right="10" top="8"/>
         </padding>
         <Label fx:id="statusLabel" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="editor-status"/>
-        <Button fx:id="discardButton" text="Discard changes" onAction="#onDiscard" disable="true"/>
-        <Button fx:id="saveButton" text="Save" onAction="#onSave" disable="true" styleClass="save-button">
+        <Button fx:id="discardButton" text="Discard changes" onAction="#onDiscard" disable="true" styleClass="flat"/>
+        <Button fx:id="saveButton" text="Save" onAction="#onSave" disable="true" styleClass="accent">
             <tooltip>
                 <Tooltip text="Save to the JSON file (Ctrl+S)"/>
             </tooltip>

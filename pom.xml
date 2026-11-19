@@ -15,7 +15,9 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <junit.version>5.12.1</junit.version>
-        <javafx.version>21.0.6</javafx.version>
+        <javafx.version>23.0.2</javafx.version>
+        <atlantafx.version>2.1.0</atlantafx.version>
+        <ikonli.version>12.3.1</ikonli.version>
         <main.class>io.github.gfmois.connlab.Launcher</main.class>
     </properties>
 
@@ -29,6 +31,21 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.mkpaz</groupId>
+            <artifactId>atlantafx-base</artifactId>
+            <version>${atlantafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>${ikonli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-feather-pack</artifactId>
+            <version>${ikonli.version}</version>
         </dependency>
         <dependency>
             <groupId>org.controlsfx</groupId>
@@ -152,7 +169,7 @@
                                 <modulePath>${project.build.directory}/libs</modulePath>
                             </modulePaths>
 
-                            <addModules>java.base,java.sql,java.desktop,javafx.controls,javafx.fxml,javafx.graphics
+                            <addModules>java.base,java.sql,java.desktop,java.prefs,javafx.controls,javafx.fxml,javafx.graphics
                             </addModules>
 
                             <vendor>Moises Guerola</vendor>

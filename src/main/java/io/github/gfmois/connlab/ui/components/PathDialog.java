@@ -1,33 +1,32 @@
 package io.github.gfmois.connlab.ui.components;
 
 import io.github.gfmois.connlab.app.AppSettings;
-import io.github.gfmois.connlab.ui.ConnLabApplication;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.io.IOException;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
+/**
+ * Asks for the folder where the configuration files are kept.
+ */
 public class PathDialog extends Dialog<String> {
-    private static final Logger logger = LogManager.getLogger(PathDialog.class);
     private final TextField pathField = new TextField();
 
     public PathDialog(AppSettings appSettings) {
-        setTitle("Configurations Path");
-        setHeaderText("Enter the path of the configurations:");
-
-        // Change Icon
-        try {
-            Stage stage = (Stage) getDialogPane().getScene().getWindow();
-            ConnLabApplication.setAppIcon(stage);
-        } catch (NullPointerException e) {
-            logger.error("Failed to load dialog icon", e);
-        } catch (IOException e) {
-            logger.error("Failed to set dialog icon", e);
-        }
+        setTitle("Configurations folder");
+        setHeaderText("Choose the folder where the configurations are kept");
+        Dialogs.setIcon(getDialogPane().getScene().getWindow());
 
         // Buttons
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -35,25 +34,49 @@ public class PathDialog extends Dialog<String> {
         getDialogPane().getButtonTypes().addAll(okButton, cancelButton);
 
         // Content
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 20, 10 , 20));
+        pathField.setPrefColumnCount(36);
+        pathField.setPromptText("C:\\Users\\me\\connlab-configurations");
+        if (appSettings != null && appSettings.getConfigurationsPath() != null) {
+            pathField.setText(appSettings.getConfigurationsPath());
+        }
+        HBox.setHgrow(pathField, Priority.ALWAYS);
 
-        pathField.setPrefWidth(300); // NOTE: Get window width and calc 25%
-        pathField.setText(appSettings.getConfigurationsPath());
+        Button browse = new Button("Browse…", new FontIcon(Feather.FOLDER));
+        browse.setOnAction(e -> browse());
 
-        grid.add(new Label("Path:"), 0, 0);
-        grid.add(pathField, 1, 0);
+        Label hint = new Label("Every .json file in this folder and its subfolders is a configuration. It is created if it does not exist.");
+        hint.setWrapText(true);
+        hint.setMaxWidth(480);
+        hint.getStyleClass().add("text-muted");
 
-        getDialogPane().setContent(grid);
+        HBox row = new HBox(8, pathField, browse);
+        row.setAlignment(Pos.CENTER_LEFT);
+        VBox content = new VBox(10, row, hint);
+        content.setPadding(new Insets(20, 20, 10, 20));
+        getDialogPane().setContent(content);
 
-        setResultConverter(dialogButton -> {
-            if (dialogButton == okButton) {
-                return pathField.getText();
+        Node ok = getDialogPane().lookupButton(okButton);
+        ok.disableProperty().bind(pathField.textProperty().isEmpty());
+
+        setOnShown(e -> pathField.requestFocus());
+        setResultConverter(dialogButton -> dialogButton == okButton ? pathField.getText().trim() : null);
+    }
+
+    private void browse() {
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Configurations folder");
+        String current = pathField.getText();
+        try {
+            if (current != null && !current.isBlank() && Files.isDirectory(Path.of(current.trim()))) {
+                chooser.setInitialDirectory(new File(current.trim()));
             }
+        } catch (InvalidPathException ignored) {
+            // Start from the default folder
+        }
 
-            return null;
-        });
+        File folder = chooser.showDialog(getDialogPane().getScene().getWindow());
+        if (folder != null) {
+            pathField.setText(folder.getAbsolutePath());
+        }
     }
 }
