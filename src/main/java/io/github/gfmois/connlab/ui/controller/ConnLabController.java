@@ -9,6 +9,7 @@ import io.github.gfmois.connlab.platform.PlatformActions;
 import io.github.gfmois.connlab.platform.PlatformFactory;
 import io.github.gfmois.connlab.service.AppSettingsService;
 import io.github.gfmois.connlab.service.ConfigurationService;
+import io.github.gfmois.connlab.service.ConfigurationValidator;
 import io.github.gfmois.connlab.service.TcpServerService;
 import io.github.gfmois.connlab.ui.components.PathDialog;
 import javafx.animation.Animation;
@@ -33,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +42,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 public class ConnLabController implements Initializable {
     private static final Logger logger = LogManager.getLogger(ConnLabController.class);
@@ -53,6 +56,10 @@ public class ConnLabController implements Initializable {
     private final PlatformActions platform;
     private final Map<String, ObservableList<String>> logsByConfiguration = new HashMap<>();
     private String runningConfigurationName;
+    /**
+     * Set while the list is changed by code, so its selection changes are not taken as the user picking a configuration.
+     */
+    private boolean updatingList;
     private int maxLogLines = 1000;
 
     private final Timeline uptimeTimeLine;
@@ -68,6 +75,12 @@ public class ConnLabController implements Initializable {
 
     @FXML
     private Button changeConfigurationsPathButton;
+
+    @FXML
+    private Button duplicateConfigurationButton;
+
+    @FXML
+    private Button deleteConfigurationButton;
 
     @FXML
     private HBox startListeningWrapper;
@@ -130,24 +143,83 @@ public class ConnLabController implements Initializable {
     private final ChangeListener<String> configurationListSelectionListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends String> observableValue, String oldName, String newName) {
-            if (newName == null) {
-                // Selection cleared (e.g. while filtering the list): keep showing the current configuration
+            if (newName == null || updatingList) {
+                // Selection cleared (e.g. while filtering the list) or changed by code: keep showing the current configuration
                 return;
             }
 
-            Configuration selectedConfiguration = getConfiguration(newName);
-            if (selectedConfiguration == null) {
-                logger.warn("Selected configuration '{}' not found", newName);
+            if (oldName != null && configurationDetailsController.isDirty()) {
+                // Ask about the unsaved changes once this selection change has finished
+                Platform.runLater(() -> switchConfiguration(oldName, newName));
                 return;
             }
 
-            logger.debug("Selected configuration with name: {}", newName);
-            hasSelectedConfig.set(true);
-            updateServerButtons();
-            configurationDetailsController.showConfiguration(selectedConfiguration);
-            logsListView.setItems(logsFor(newName));
+            showConfiguration(newName);
         }
     };
+
+    private void showConfiguration(String name) {
+        Configuration selectedConfiguration = getConfiguration(name);
+        if (selectedConfiguration == null) {
+            logger.warn("Selected configuration '{}' not found", name);
+            return;
+        }
+
+        logger.debug("Selected configuration with name: {}", name);
+        hasSelectedConfig.set(true);
+        updateServerButtons();
+        configurationDetailsController.showConfiguration(selectedConfiguration);
+        logsListView.setItems(logsFor(name));
+    }
+
+    /**
+     * Goes back to {@code from} while asking what to do with its unsaved changes, and then moves to {@code to}.
+     */
+    private void switchConfiguration(String from, String to) {
+        selectWithoutShowing(from);
+        if (confirmUnsavedChanges()) {
+            configurationsListView.getSelectionModel().select(to);
+        }
+    }
+
+    private void selectWithoutShowing(String name) {
+        boolean wasUpdating = updatingList;
+        updatingList = true;
+        try {
+            configurationsListView.getSelectionModel().select(name);
+        } finally {
+            updatingList = wasUpdating;
+        }
+    }
+
+    /**
+     * Asks whether to save or discard the unsaved changes of the configuration being edited.
+     *
+     * @return true when there are no unsaved changes left and the caller can go on
+     */
+    public boolean confirmUnsavedChanges() {
+        if (!configurationDetailsController.isDirty()) {
+            return true;
+        }
+
+        Configuration editing = configurationDetailsController.getConfiguration();
+        ButtonType save = new ButtonType("Save", ButtonBar.ButtonData.YES);
+        ButtonType discard = new ButtonType("Discard", ButtonBar.ButtonData.NO);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "\"" + (editing == null ? "" : editing.getName()) + "\" has changes that are not saved.",
+                save, discard, ButtonType.CANCEL);
+        alert.setHeaderText("Save the changes?");
+
+        ButtonType choice = alert.showAndWait().orElse(ButtonType.CANCEL);
+        if (choice == save) {
+            return configurationDetailsController.save();
+        }
+        if (choice == discard) {
+            configurationDetailsController.discard();
+            return true;
+        }
+        return false;
+    }
 
     private final ChangeListener<String> searchConfigurationListener = (observable, oldValue, newValue) -> applyConfigurationFilter();
 
@@ -159,15 +231,198 @@ public class ConnLabController implements Initializable {
 
         logger.debug("Filter '{}' matched {} configurations", query, visible.size());
         String previouslySelected = configurationsListView.getSelectionModel().getSelectedItem();
-        configurationsListView.getItems().setAll(visible);
-        if (previouslySelected != null && visible.contains(previouslySelected)) {
-            configurationsListView.getSelectionModel().select(previouslySelected);
+        boolean wasUpdating = updatingList;
+        updatingList = true;
+        try {
+            configurationsListView.getItems().setAll(visible);
+            if (previouslySelected != null && visible.contains(previouslySelected)) {
+                configurationsListView.getSelectionModel().select(previouslySelected);
+            }
+        } finally {
+            updatingList = wasUpdating;
         }
+    }
+
+    /**
+     * Reads the configurations from disk again and selects {@code name}, or the first one when
+     * it is not there.
+     *
+     * @param show whether to show the selected configuration in the editor
+     */
+    private void reloadConfigurations(String name, boolean show) {
+        configurations = configurationService.getAll();
+        configurationNames = configurations.stream().map(Configuration::getName).filter(Objects::nonNull).toList();
+
+        boolean wasUpdating = updatingList;
+        updatingList = true;
+        try {
+            applyConfigurationFilter();
+            configurationsListView.getSelectionModel().clearSelection();
+            if (!show && name != null) {
+                configurationsListView.getSelectionModel().select(name);
+            }
+        } finally {
+            updatingList = wasUpdating;
+        }
+
+        if (!show) {
+            return;
+        }
+        if (name != null && configurationsListView.getItems().contains(name)) {
+            configurationsListView.getSelectionModel().select(name);
+        } else if (!configurationsListView.getItems().isEmpty()) {
+            configurationsListView.getSelectionModel().selectFirst();
+        } else {
+            hasSelectedConfig.set(false);
+            configurationDetailsController.showConfiguration(null);
+            updateServerButtons();
+        }
+    }
+
+    /**
+     * Saves the draft of the editor; the running server starts answering with it straight away.
+     *
+     * @return the saved configuration, or null when it could not be saved
+     */
+    private Configuration saveConfiguration(Configuration draft) {
+        Configuration previous = configurations.stream()
+                .filter(c -> c.getConfigPath() != null && c.getConfigPath().equals(draft.getConfigPath()))
+                .findFirst()
+                .orElse(null);
+
+        Configuration saved;
+        try {
+            saved = configurationService.save(draft);
+        } catch (ConfigurationService.InvalidConfigurationException e) {
+            showError("The configuration cannot be saved", String.join("\n", e.getErrors()));
+            return null;
+        } catch (UncheckedIOException e) {
+            logger.error("Error while saving configuration '{}'", draft.getName(), e);
+            showError("The configuration could not be saved", e.getMessage());
+            return null;
+        }
+
+        if (previous != null && previous.getName() != null && !previous.getName().equals(saved.getName())) {
+            ObservableList<String> logs = logsByConfiguration.remove(previous.getName());
+            if (logs != null) logsByConfiguration.put(saved.getName(), logs);
+            if (previous.getName().equals(runningConfigurationName)) runningConfigurationName = saved.getName();
+        }
+
+        reloadConfigurations(saved.getName(), false);
+
+        Configuration running = tcpServerService.getActiveConfiguration();
+        if (running != null && Objects.equals(running.getConfigPath(), saved.getConfigPath())) {
+            boolean addressChanged = running.getPort() != saved.getPort()
+                    || !hostOrDefault(running.getHost()).equals(hostOrDefault(saved.getHost()));
+            tcpServerService.reloadConfiguration(configurationService.copy(saved));
+            runningConfigurationName = saved.getName();
+            configurationDetailsController.setStatus(addressChanged
+                    ? "Saved. The server keeps listening on the old host and port until it is restarted."
+                    : "Saved and applied to the running server");
+        }
+        return saved;
+    }
+
+    private static String hostOrDefault(String host) {
+        return host == null || host.isBlank() ? "0.0.0.0" : host.trim();
+    }
+
+    @FXML
+    private void onNewConfigurationClicked() {
+        if (!confirmUnsavedChanges()) return;
+
+        askName("New configuration", "Name of the new configuration:", uniqueName("New configuration"))
+                .ifPresent(name -> createAndSelect(() -> configurationService.create(name)));
+    }
+
+    @FXML
+    private void onDuplicateConfigurationClicked() {
+        if (!confirmUnsavedChanges()) return;
+
+        Configuration source = configurationDetailsController.getConfiguration();
+        if (source == null) return;
+
+        askName("Duplicate configuration", "Name of the copy of \"" + source.getName() + "\":", uniqueName(source.getName() + " copy"))
+                .ifPresent(name -> createAndSelect(() -> configurationService.duplicate(source, name)));
+    }
+
+    @FXML
+    private void onDeleteConfigurationClicked() {
+        Configuration configuration = configurationDetailsController.getConfiguration();
+        if (configuration == null) return;
+
+        Configuration running = tcpServerService.getActiveConfiguration();
+        if (running != null && Objects.equals(running.getConfigPath(), configuration.getConfigPath())) {
+            showError("The configuration is in use", "Stop the server before deleting \"" + configuration.getName() + "\".");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "The file " + configuration.getConfigPath() + " will be deleted. This cannot be undone.",
+                ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText("Delete \"" + configuration.getName() + "\"?");
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+
+        try {
+            configurationService.delete(configuration);
+        } catch (UncheckedIOException e) {
+            logger.error("Error while deleting configuration '{}'", configuration.getName(), e);
+            showError("The configuration could not be deleted", e.getMessage());
+            return;
+        }
+
+        logsByConfiguration.remove(configuration.getName());
+        configurationDetailsController.showConfiguration(null);
+        reloadConfigurations(null, true);
+    }
+
+    private void createAndSelect(Supplier<Configuration> create) {
+        Configuration created;
+        try {
+            created = create.get();
+        } catch (ConfigurationService.InvalidConfigurationException e) {
+            showError("The configuration cannot be created", String.join("\n", e.getErrors()));
+            return;
+        } catch (UncheckedIOException e) {
+            logger.error("Error while creating a configuration", e);
+            showError("The configuration could not be created", e.getMessage());
+            return;
+        }
+
+        searchField.clear();
+        reloadConfigurations(created.getName(), true);
+    }
+
+    private Optional<String> askName(String title, String header, String suggested) {
+        TextInputDialog dialog = new TextInputDialog(suggested);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        return dialog.showAndWait().map(String::trim).filter(name -> !name.isEmpty());
+    }
+
+    private String uniqueName(String base) {
+        Set<String> taken = new HashSet<>();
+        configurationNames.forEach(name -> taken.add(name.toLowerCase(Locale.ROOT)));
+        String name = base;
+        for (int i = 2; taken.contains(name.toLowerCase(Locale.ROOT)); i++) {
+            name = base + " " + i;
+        }
+        return name;
+    }
+
+    private static void showError(String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, content, ButtonType.OK);
+        alert.setHeaderText(header);
+        alert.showAndWait();
     }
 
     private final EventHandler<ActionEvent> changeConfigurationsPathListener = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
+            if (!confirmUnsavedChanges()) {
+                return;
+            }
+
             AppSettings appSettings = appSettingsService.getAppSettings();
             PathDialog setConfigurationsPathDialog = new PathDialog(appSettings);
             String selectedPath = setConfigurationsPathDialog.showAndWait().orElse(null);
@@ -177,22 +432,8 @@ public class ConnLabController implements Initializable {
             }
 
             appSettingsService.save(selectedPath, null, true);
-            configurations.clear();
-            List<Configuration> configurationsFound = configurationService.getAll();
-            logger.info("Found {} configurations on the new path: {}", configurationsFound.size(), selectedPath);
-            configurations.addAll(configurationsFound);
-
-            configurationNames = configurations.stream().map(Configuration::getName).toList();
-            applyConfigurationFilter();
-
-            if (configurationsListView.getSelectionModel().getSelectedItem() == null) {
-                if (configurationsListView.getItems().isEmpty()) {
-                    hasSelectedConfig.set(false);
-                    configurationDetailsController.showConfiguration(null);
-                } else {
-                    configurationsListView.getSelectionModel().selectFirst();
-                }
-            }
+            reloadConfigurations(configurationsListView.getSelectionModel().getSelectedItem(), true);
+            logger.info("Found {} configurations on the new path: {}", configurations.size(), selectedPath);
         }
     };
 
@@ -227,6 +468,10 @@ public class ConnLabController implements Initializable {
 
     @FXML
     private void onStartServerClicked() {
+        if (!confirmUnsavedChanges()) {
+            return;
+        }
+
         Configuration activeConfiguration = getSelectedConfiguration();
         if (activeConfiguration == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error while trying to recover the current configuration", ButtonType.OK);
@@ -377,10 +622,11 @@ public class ConnLabController implements Initializable {
             logger.debug("Message Event: {}", event);
         });
 
-        configurationDetailsController.setOnFlagsChanged(cfg -> {
-            logger.info("New configuration selected");
-            logger.debug("New Instance Configuration: {}", cfg);
-        });
+        configurationDetailsController.setConfigurationService(configurationService);
+        configurationDetailsController.setValidator(cfg -> ConfigurationValidator.validate(cfg, configurations));
+        configurationDetailsController.setOnSave(this::saveConfiguration);
+        duplicateConfigurationButton.disableProperty().bind(hasSelectedConfig.not());
+        deleteConfigurationButton.disableProperty().bind(hasSelectedConfig.not());
 
         AppSettings appSettings = appSettingsService.getAppSettings();
         if (appSettings.getConfigurationsPath() == null || appSettings.getConfigurationsPath().isEmpty()) {
@@ -399,14 +645,7 @@ public class ConnLabController implements Initializable {
             maxLogLines = configuredMaxLogLines;
         }
 
-        configurations = configurationService.getAll();
-        configurationNames = configurations.stream().map(Configuration::getName).toList();
-        configurationsListView.getItems().addAll(configurationNames);
-
-        if (!configurationsListView.getItems().isEmpty()) {
-            configurationsListView.getSelectionModel().selectFirst();
-            hasSelectedConfig.set(true);
-        }
+        reloadConfigurations(null, true);
     }
 
     private void setupLogs() {

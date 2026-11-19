@@ -16,6 +16,17 @@
             </padding>
         </TextField>
 
+        <HBox spacing="6">
+            <padding>
+                <Insets left="10" right="10"/>
+            </padding>
+            <Button text="New" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#onNewConfigurationClicked"/>
+            <Button fx:id="duplicateConfigurationButton" text="Duplicate" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                    onAction="#onDuplicateConfigurationClicked"/>
+            <Button fx:id="deleteConfigurationButton" text="Delete" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                    onAction="#onDeleteConfigurationClicked"/>
+        </HBox>
+
         <ListView fx:id="configurationsListView" VBox.vgrow="ALWAYS"/>
 
         <Button fx:id="changeConfigurationsPathButton" maxWidth="Infinity" text="Change Configurations Path">
