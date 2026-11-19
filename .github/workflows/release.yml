@@ -1,7 +1,7 @@
 name: Release (Windows MSI)
 
 # Builds the Windows installer with jpackage, which needs Windows and WiX 3, so it runs on a
-# GitHub-hosted Windows runner instead of the self-hosted Linux one.
+# self-hosted Windows runner (labels: self-hosted, windows, connlab) instead of the Linux one.
 #  - push to main: builds the MSI and publishes the GitHub release v<pom version>, unless that tag already exists
 #  - pull requests that change the packaging: only builds the MSI and keeps it as a workflow artifact
 #  - manual run: same as a push to main
@@ -23,12 +23,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  WIX_VERSION: "3.14.1"
+  WIX_URL: https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
 
 jobs:
   msi:
     name: Build MSI
-    runs-on: windows-latest
+    runs-on: [ self-hosted, windows, connlab ]
 
     steps:
       - name: Checkout
@@ -44,12 +44,15 @@ jobs:
       - name: Install WiX 3
         shell: pwsh
         run: |
+          # The binaries zip needs no admin rights; it is kept in the runner tool cache between runs
           if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
-            choco install wixtoolset --version $env:WIX_VERSION -y --no-progress
-            $bin = Get-ChildItem "${env:ProgramFiles(x86)}" -Directory -Filter "WiX Toolset v3*" |
-                Sort-Object Name -Descending | Select-Object -First 1
-            if (-not $bin) { throw "WiX was not installed" }
-            Add-Content $env:GITHUB_PATH (Join-Path $bin.FullName "bin")
+            $wix = Join-Path $env:RUNNER_TOOL_CACHE "wix-3.14.1"
+            if (-not (Test-Path (Join-Path $wix "candle.exe"))) {
+              $zip = Join-Path $env:RUNNER_TEMP "wix.zip"
+              Invoke-WebRequest $env:WIX_URL -OutFile $zip
+              Expand-Archive $zip -DestinationPath $wix -Force
+            }
+            Add-Content $env:GITHUB_PATH $wix
           }
 
       - name: Read version
