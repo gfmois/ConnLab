@@ -8,3 +8,52 @@
     -fx-text-fill: #888;
     -fx-font-size: 11px;
 }
+
+/* Configuration editor */
+
+.editor-toolbar {
+    -fx-border-color: transparent transparent #d0d0d0 transparent;
+}
+
+.editor-status {
+    -fx-text-fill: #666;
+}
+
+.editor-errors {
+    -fx-background-color: #fdecea;
+    -fx-text-fill: #a12622;
+    -fx-padding: 6 10 6 10;
+}
+
+.editor-scroll,
+.editor-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.config-name-field {
+    -fx-font-size: 22px;
+}
+
+.message-card {
+    -fx-background-color: #f7f7f7;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.message-card .message-title {
+    -fx-padding: 0;
+}
+
+.small-button {
+    -fx-padding: 2 7 2 7;
+}
+
+.text-field:invalid {
+    -fx-border-color: #d32f2f;
+    -fx-border-radius: 2;
+}
+
+.try-result {
+    -fx-font-family: monospace;
+}

@@ -1,11 +1,22 @@
 package io.github.gfmois.connlab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"name", "description", "host", "port", "hasToRespond", "messages"})
 public class Configuration {
+    @JsonIgnore
     private Integer id;
     private String name;
     private String description;
+    /**
+     * The file this configuration was read from or will be written to; not part of the JSON.
+     */
+    @JsonIgnore
     private String configPath;
     private String host;
     private int port;

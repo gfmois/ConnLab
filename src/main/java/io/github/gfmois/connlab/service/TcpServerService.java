@@ -69,6 +69,29 @@ public class TcpServerService implements ServerEventListener {
         activeConfiguration = null;
     }
 
+    /**
+     * Answers the next messages with {@code configuration}, without restarting the server. The
+     * host and port the server listens on do not change until it is started again.
+     *
+     * @return false when the server is not running and nothing changed
+     */
+    public synchronized boolean reloadConfiguration(Configuration configuration) {
+        if (!isRunning() || configuration == null) {
+            return false;
+        }
+
+        activeConfiguration = configuration;
+        logger.info("Reloaded configuration {}", configuration.getName());
+        return true;
+    }
+
+    /**
+     * @return the configuration used to answer messages, or null when the server is not running
+     */
+    public Configuration getActiveConfiguration() {
+        return activeConfiguration;
+    }
+
     public boolean isRunning() {
         TcpServer current = server;
         return current != null && current.isRunning();

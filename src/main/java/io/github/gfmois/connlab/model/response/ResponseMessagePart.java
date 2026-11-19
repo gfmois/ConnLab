@@ -1,7 +1,12 @@
 package io.github.gfmois.connlab.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.StringJoiner;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"type", "text", "partIndex"})
 public class ResponseMessagePart {
     private ResponseType type;
     private String text;

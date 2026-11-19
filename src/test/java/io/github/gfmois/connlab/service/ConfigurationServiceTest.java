@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
+import static io.github.gfmois.connlab.support.Configs.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigurationServiceTest {
@@ -109,5 +110,184 @@ class ConfigurationServiceTest {
     @Test
     void missingFolderGivesNoConfigurations() {
         assertTrue(serviceFor(configsDir.resolve("missing")).getAll().isEmpty());
+    }
+
+    @Test
+    void configurationsAreSortedByNameAndKnowTheirFile() throws IOException {
+        write("z.json", "{\"name\": \"beta\", \"port\": 1}");
+        write("a.json", "{\"name\": \"Alpha\", \"port\": 1}");
+
+        List<Configuration> all = serviceFor(configsDir).getAll();
+
+        assertEquals(List.of("Alpha", "beta"), all.stream().map(Configuration::getName).toList());
+        assertEquals(configsDir.resolve("a.json").toAbsolutePath().toString(), all.getFirst().getConfigPath());
+    }
+
+    // ----- Saving -----
+
+    @Test
+    void savingWritesTheChangesToTheSameFile() throws IOException {
+        copyBundledDefault();
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration cfg = service.getAll().getFirst();
+
+        cfg.setPort(7000);
+        cfg.getMessages().getFirst().setReceivedRegex("^Hi, (.*)$");
+        service.save(cfg);
+
+        List<Configuration> reloaded = service.getAll();
+        assertEquals(1, reloaded.size());
+        assertEquals(7000, reloaded.getFirst().getPort());
+        assertEquals("Bye, Ana!", new ResponseEngine().respond(reloaded.getFirst(), "Hi, Ana").orElseThrow().text());
+    }
+
+    @Test
+    void savingAnUnchangedFileKeepsItsContent() throws IOException {
+        copyBundledDefault();
+        ConfigurationService service = serviceFor(configsDir);
+        String before = Files.readString(configsDir.resolve("default.json"));
+
+        service.save(service.getAll().getFirst());
+
+        assertEquals(normalizeNewLines(before).strip(), normalizeNewLines(Files.readString(configsDir.resolve("default.json"))).strip());
+    }
+
+    @Test
+    void theFileOnlyHasTheFieldsThatApply() throws IOException {
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration cfg = configuration(true, message("Hello", "^Hello, (.*)$", text("Bye, "), group(1)));
+        cfg.setName("  Clean  ");
+        cfg.setPort(1234);
+        cfg.setConfigPath(null);
+        // Leftovers of switching a part between types in the editor
+        cfg.getMessages().getFirst().getResponseBuilder().get(0).setPartIndex(3);
+        cfg.getMessages().getFirst().getResponseBuilder().get(1).setText("ignored");
+
+        Configuration saved = service.save(cfg);
+
+        String json = normalizeNewLines(Files.readString(Path.of(saved.getConfigPath())));
+        assertEquals("""
+                {
+                    "name": "Clean",
+                    "port": 1234,
+                    "hasToRespond": true,
+                    "messages": [
+                        {
+                            "title": "Hello",
+                            "broadcast": false,
+                            "receivedRegex": "^Hello, (.*)$",
+                            "responseBuilder": [
+                                {
+                                    "type": "static",
+                                    "text": "Bye, "
+                                },
+                                {
+                                    "type": "messagePart",
+                                    "partIndex": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+                """, json);
+    }
+
+    @Test
+    void savingANewConfigurationCreatesAFileNamedAfterIt() {
+        ConfigurationService service = serviceFor(configsDir);
+
+        Configuration first = service.create("Impresora Zebra");
+        Configuration second = service.duplicate(first, "Impresora zebra!");
+
+        assertEquals(configsDir.resolve("impresora-zebra.json").toAbsolutePath().toString(), first.getConfigPath());
+        assertEquals(configsDir.resolve("impresora-zebra-2.json").toAbsolutePath().toString(), second.getConfigPath());
+        assertEquals(List.of("Impresora Zebra", "Impresora zebra!"), names(service.getAll()));
+    }
+
+    @Test
+    void createdConfigurationsHaveUsableDefaults() {
+        Configuration created = serviceFor(configsDir).create("New");
+
+        assertEquals(6969, created.getPort());
+        assertTrue(created.isHasToRespond());
+        assertTrue(created.getMessages().isEmpty());
+    }
+
+    @Test
+    void invalidConfigurationsAreNotWritten() throws IOException {
+        write("a.json", "{\"name\": \"Taken\", \"port\": 1}");
+        ConfigurationService service = serviceFor(configsDir);
+
+        var e = assertThrows(ConfigurationService.InvalidConfigurationException.class, () -> service.create("taken"));
+
+        assertEquals(List.of("There is already a configuration named \"taken\""), e.getErrors());
+        try (var files = Files.list(configsDir)) {
+            assertEquals(1, files.count());
+        }
+    }
+
+    @Test
+    void savingDoesNotChangeTheGivenConfiguration() {
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration cfg = configuration(true);
+        cfg.setName("  Spaces  ");
+        cfg.setPort(1);
+
+        service.save(cfg);
+
+        assertEquals("  Spaces  ", cfg.getName());
+        assertNull(cfg.getConfigPath());
+    }
+
+    @Test
+    void deleteRemovesTheFile() {
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration created = service.create("To delete");
+
+        service.delete(created);
+
+        assertTrue(service.getAll().isEmpty());
+    }
+
+    @Test
+    void copiesAreIndependent() {
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration cfg = configuration(true, helloMessage());
+        cfg.setConfigPath("/configs/x.json");
+
+        Configuration copy = service.copy(cfg);
+        copy.getMessages().getFirst().getResponseBuilder().getFirst().setText("Changed");
+        copy.getMessages().add(helloMessage());
+
+        assertEquals("/configs/x.json", copy.getConfigPath());
+        assertEquals(1, cfg.getMessages().size());
+        assertEquals("Bye, ", cfg.getMessages().getFirst().getResponseBuilder().getFirst().getText());
+    }
+
+    @Test
+    void toJsonIgnoresChangesThatAreNotSaved() {
+        ConfigurationService service = serviceFor(configsDir);
+        Configuration cfg = configuration(true, helloMessage());
+        String json = service.toJson(cfg);
+
+        Configuration sameButUntrimmed = service.copy(cfg);
+        sameButUntrimmed.setName(" Test ");
+        sameButUntrimmed.setConfigPath("/elsewhere.json");
+        Configuration different = service.copy(cfg);
+        different.setPort(99);
+
+        assertEquals(json, service.toJson(sameButUntrimmed));
+        assertNotEquals(json, service.toJson(different));
+    }
+
+    @Test
+    void fileNamesAreSafe() {
+        assertEquals("hola-que-tal", ConfigurationService.fileNameFor("¡Hola, qué tal!"));
+        assertEquals("a-b", ConfigurationService.fileNameFor("  A / B  "));
+        assertEquals("configuration", ConfigurationService.fileNameFor("***"));
+    }
+
+    private static String normalizeNewLines(String text) {
+        return text.replace("\r\n", "\n");
     }
 }
