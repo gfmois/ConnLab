@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class TcpServerService implements ServerEventListener {
     private static final Logger logger = LogManager.getLogger(TcpServerService.class);
@@ -163,9 +164,15 @@ public class TcpServerService implements ServerEventListener {
                 continue;
             }
 
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(incoming);
+            Pattern pattern;
+            try {
+                pattern = Pattern.compile(regex);
+            } catch (PatternSyntaxException e) {
+                logger.error("Invalid regex '{}' in message '{}', skipping it: {}", regex, msg.getTitle(), e.getDescription());
+                continue;
+            }
 
+            Matcher matcher = pattern.matcher(incoming);
             if (matcher.matches()) {
                 logger.debug("Incoming '{}' matched regex '{}' for message", incoming, regex);
                 return msg;
