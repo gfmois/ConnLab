@@ -4,6 +4,9 @@ name: Release (Windows MSI)
 # self-hosted Windows runner (labels: self-hosted, windows, connlab) instead of the Linux one.
 # On every push to main it builds the MSI and publishes the GitHub release v<pom version>,
 # unless that release already exists.
+#
+# The steps use Windows PowerShell and the GitHub REST API only, so the runner can run as a
+# Windows service without Git Bash, PowerShell 7 or the gh CLI on its PATH.
 
 on:
   push:
@@ -18,6 +21,10 @@ concurrency:
 
 env:
   WIX_URL: https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
+
+defaults:
+  run:
+    shell: powershell
 
 jobs:
   msi:
@@ -36,54 +43,75 @@ jobs:
           cache: maven
 
       - name: Install WiX 3
-        shell: pwsh
         run: |
+          $ErrorActionPreference = "Stop"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           # The binaries zip needs no admin rights; it is kept in the runner tool cache between runs
           if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
             $wix = Join-Path $env:RUNNER_TOOL_CACHE "wix-3.14.1"
             if (-not (Test-Path (Join-Path $wix "candle.exe"))) {
               $zip = Join-Path $env:RUNNER_TEMP "wix.zip"
-              Invoke-WebRequest $env:WIX_URL -OutFile $zip
+              Invoke-WebRequest $env:WIX_URL -OutFile $zip -UseBasicParsing
               Expand-Archive $zip -DestinationPath $wix -Force
             }
-            Add-Content $env:GITHUB_PATH $wix
+            Add-Content -Path $env:GITHUB_PATH -Value $wix
           }
 
       - name: Read version
         id: ver
-        shell: bash
         run: |
-          set -euo pipefail
-          VERSION="$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version | tr -d '[:space:]')"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          $ErrorActionPreference = "Stop"
+          $version = (& .\mvnw.cmd -q -DforceStdout help:evaluate "-Dexpression=project.version" | Out-String).Trim()
+          if ($LASTEXITCODE -ne 0 -or -not $version) { throw "Could not read the project version" }
+          Write-Host "Version $version"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$version"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "tag=v$version"
 
       - name: Check whether the release exists
         id: exists
-        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "${{ steps.ver.outputs.tag }}" > /dev/null 2>&1; then
-            echo "Release ${{ steps.ver.outputs.tag }} already exists"
-            echo "release=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "release=false" >> "$GITHUB_OUTPUT"
-          fi
+          $ErrorActionPreference = "Stop"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
+          $url = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/tags/${{ steps.ver.outputs.tag }}"
+          $exists = "true"
+          try {
+            Invoke-RestMethod -Uri $url -Headers $headers | Out-Null
+            Write-Host "Release ${{ steps.ver.outputs.tag }} already exists, nothing to do"
+          } catch {
+            if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 404) { $exists = "false" } else { throw }
+          }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "release=$exists"
 
       - name: Build the installer
         if: steps.exists.outputs.release == 'false'
-        shell: bash
-        run: ./mvnw -B install
+        run: |
+          & .\mvnw.cmd -B install
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Publish the release
         if: steps.exists.outputs.release == 'false'
-        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          gh release create "${{ steps.ver.outputs.tag }}" target/dist/*.msi \
-            --target "${{ github.sha }}" \
-            --title "ConnLab ${{ steps.ver.outputs.version }}" \
-            --generate-notes
+          $ErrorActionPreference = "Stop"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $msi = Get-ChildItem target\dist\*.msi | Select-Object -First 1
+          if (-not $msi) { throw "No MSI in target\dist" }
+          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
+
+          $body = @{
+            tag_name               = "${{ steps.ver.outputs.tag }}"
+            target_commitish       = "$env:GITHUB_SHA"
+            name                   = "ConnLab ${{ steps.ver.outputs.version }}"
+            generate_release_notes = $true
+          } | ConvertTo-Json
+          $release = Invoke-RestMethod -Method Post -Uri "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases" `
+              -Headers $headers -Body $body -ContentType "application/json"
+
+          $upload = $release.upload_url -replace "\{.*\}$", ""
+          Invoke-RestMethod -Method Post -Uri "$($upload)?name=$($msi.Name)" -Headers $headers `
+              -InFile $msi.FullName -ContentType "application/octet-stream" | Out-Null
+          Write-Host "Published $($release.html_url) with $($msi.Name)"
