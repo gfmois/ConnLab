@@ -1,12 +1,10 @@
 name: Release (Windows MSI)
 
-# Builds the Windows installer with jpackage, which needs Windows and WiX 3, so it runs on a
-# GitHub-hosted Windows runner (the self-hosted one is Linux only).
-# On every push to main it builds the MSI and publishes the GitHub release v<pom version>,
-# unless that release already exists.
+# On every push to main it builds the Windows installer and publishes the GitHub release
+# v<pom version>, unless that release already exists.
 #
-# The steps use Windows PowerShell and the GitHub REST API only, so they do not depend on
-# Git Bash, PowerShell 7 or the gh CLI being on the PATH.
+# It runs on the self-hosted Linux runner: .github/release/build-msi.sh builds the MSI without
+# Windows (jlink with the jmods of the Windows JDK, the jpackage launcher and wixl).
 
 on:
   push:
@@ -19,17 +17,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 
-env:
-  WIX_URL: https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
-
-defaults:
-  run:
-    shell: powershell
-
 jobs:
   msi:
     name: Build MSI
-    runs-on: windows-latest
+    runs-on: [ self-hosted, linux, connlab ]
 
     steps:
       - name: Checkout
@@ -42,76 +33,57 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Install WiX 3
-        run: |
-          $ErrorActionPreference = "Stop"
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          # The binaries zip needs no admin rights; it is kept in the runner tool cache between runs
-          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
-            $wix = Join-Path $env:RUNNER_TOOL_CACHE "wix-3.14.1"
-            if (-not (Test-Path (Join-Path $wix "candle.exe"))) {
-              $zip = Join-Path $env:RUNNER_TEMP "wix.zip"
-              Invoke-WebRequest $env:WIX_URL -OutFile $zip -UseBasicParsing
-              Expand-Archive $zip -DestinationPath $wix -Force
-            }
-            Add-Content -Path $env:GITHUB_PATH -Value $wix
-          }
+      # resedit, which gives the launcher its icon and version, needs Node.js 20 or later
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Read version
         id: ver
         run: |
-          $ErrorActionPreference = "Stop"
-          $version = (& .\mvnw.cmd -q -DforceStdout help:evaluate "-Dexpression=project.version" | Out-String).Trim()
-          if ($LASTEXITCODE -ne 0 -or -not $version) { throw "Could not read the project version" }
-          Write-Host "Version $version"
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$version"
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "tag=v$version"
+          version="$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version)"
+          [ -n "$version" ] || { echo "Could not read the project version" >&2; exit 1; }
+          echo "Version $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
 
       - name: Check whether the release exists
         id: exists
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
         run: |
-          $ErrorActionPreference = "Stop"
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
-          $url = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/tags/${{ steps.ver.outputs.tag }}"
-          $exists = "true"
-          try {
-            Invoke-RestMethod -Uri $url -Headers $headers | Out-Null
-            Write-Host "Release ${{ steps.ver.outputs.tag }} already exists, nothing to do"
-          } catch {
-            if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -eq 404) { $exists = "false" } else { throw }
-          }
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "release=$exists"
+          code="$(curl -sS -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/$TAG")"
+          case "$code" in
+            200) echo "Release $TAG already exists, nothing to do"; echo "release=true" >> "$GITHUB_OUTPUT" ;;
+            404) echo "release=false" >> "$GITHUB_OUTPUT" ;;
+            *) echo "Unexpected HTTP $code looking for release $TAG" >&2; exit 1 ;;
+          esac
 
       - name: Build the installer
+        id: msi
         if: steps.exists.outputs.release == 'false'
         run: |
-          & .\mvnw.cmd -B install
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .github/release/build-msi.sh > "$RUNNER_TEMP/msi-path"
+          echo "path=$(tail -1 "$RUNNER_TEMP/msi-path")" >> "$GITHUB_OUTPUT"
 
       - name: Publish the release
         if: steps.exists.outputs.release == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          MSI: ${{ steps.msi.outputs.path }}
         run: |
-          $ErrorActionPreference = "Stop"
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $msi = Get-ChildItem target\dist\*.msi | Select-Object -First 1
-          if (-not $msi) { throw "No MSI in target\dist" }
-          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json" }
-
-          $body = @{
-            tag_name               = "${{ steps.ver.outputs.tag }}"
-            target_commitish       = "$env:GITHUB_SHA"
-            name                   = "ConnLab ${{ steps.ver.outputs.version }}"
-            generate_release_notes = $true
-          } | ConvertTo-Json
-          $release = Invoke-RestMethod -Method Post -Uri "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases" `
-              -Headers $headers -Body $body -ContentType "application/json"
-
-          $upload = $release.upload_url -replace "\{.*\}$", ""
-          Invoke-RestMethod -Method Post -Uri "$($upload)?name=$($msi.Name)" -Headers $headers `
-              -InFile $msi.FullName -ContentType "application/octet-stream" | Out-Null
-          Write-Host "Published $($release.html_url) with $($msi.Name)"
+          api() { curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
+          body="$(jq -n --arg tag "$TAG" --arg sha "$GITHUB_SHA" --arg name "ConnLab $VERSION" \
+            '{tag_name: $tag, target_commitish: $sha, name: $name, generate_release_notes: true}')"
+          release="$(api -X POST "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases" -d "$body")"
+          upload="$(jq -r .upload_url <<< "$release")"
+          upload="${upload%%\{*}"
+          api -X POST -H "Content-Type: application/octet-stream" --data-binary "@$MSI" \
+            "$upload?name=$(basename "$MSI")" > /dev/null
+          echo "Published $(jq -r .html_url <<< "$release") with $(basename "$MSI")"
