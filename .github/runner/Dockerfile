@@ -1,7 +1,8 @@
 # Self-hosted GitHub Actions runner for this repository, in a container.
 # The jobs download the JDK (setup-java) and the Qodana analyzer (native mode,
 # no Docker needed) into the runner's home (a volume) the first time and reuse
-# them. See compose.yaml.
+# them. msitools and wixl build the Windows installer of the release on Linux
+# (.github/release/build-msi.sh). See compose.yaml.
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -9,7 +10,7 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \
-      ca-certificates curl git jq tar unzip zip fontconfig
+      ca-certificates curl git jq tar unzip zip fontconfig msitools wixl
 
 # The runner, checked against the SHA-256 in its release notes.
 RUN useradd --create-home --shell /bin/bash runner \

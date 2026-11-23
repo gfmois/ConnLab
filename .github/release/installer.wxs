@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The ConnLab installer, built by build-msi.sh with wixl (msitools). It installs for all users in
+  Program Files\ConnLab, with shortcuts in the Start menu and on the desktop, and replaces any
+  earlier version (same UpgradeCode as the MSIs jpackage made). The application files come from
+  files.wxs, which build-msi.sh generates with wixl-heat (component group AppFiles).
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="$(var.Name)" Version="$(var.Version)" Manufacturer="$(var.Vendor)"
+           UpgradeCode="$(var.UpgradeCode)" Language="1033">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine"
+             Description="$(var.Name) $(var.Version)" Manufacturer="$(var.Vendor)" />
+    <Media Id="1" Cabinet="app.cab" EmbedCab="yes" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.Name) is already installed." />
+
+    <Icon Id="AppIcon.ico" SourceFile="$(var.Icon)" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+    <Property Id="ARPCONTACT" Value="$(var.Vendor)" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="$(var.Name)" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+      <Directory Id="DesktopFolder" />
+    </Directory>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="Launcher" Guid="*" Win64="yes">
+        <File Id="LauncherExe" Name="$(var.Name).exe" Source="$(var.ImageDir)/$(var.Name).exe" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuFolder">
+      <Component Id="StartMenuShortcut" Guid="8B0B3C5E-2F4A-4C61-9E1D-6A7C2B1F0A01" Win64="yes">
+        <Shortcut Id="StartMenuShortcut" Name="$(var.Name)" Target="[#LauncherExe]"
+                  WorkingDirectory="INSTALLDIR" />
+        <RegistryValue Root="HKLM" Key="Software\$(var.Vendor)\$(var.Name)" Name="StartMenuShortcut"
+                       Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="8B0B3C5E-2F4A-4C61-9E1D-6A7C2B1F0A02" Win64="yes">
+        <Shortcut Id="DesktopShortcut" Name="$(var.Name)" Target="[#LauncherExe]"
+                  WorkingDirectory="INSTALLDIR" />
+        <RegistryValue Root="HKLM" Key="Software\$(var.Vendor)\$(var.Name)" Name="DesktopShortcut"
+                       Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="DefaultFeature" Title="$(var.Name)" Level="1">
+      <ComponentRef Id="Launcher" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+      <ComponentGroupRef Id="AppFiles" />
+    </Feature>
+  </Product>
+</Wix>
