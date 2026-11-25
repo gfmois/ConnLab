@@ -73,14 +73,35 @@ Requirements: JDK 21. Maven is not needed, the wrapper downloads it.
 java -jar target/libs/connlab-<version>.jar
 ```
 
-`./mvnw install` also builds the Windows installer in `target/dist` with jpackage. That needs Windows and
-[WiX 3](https://github.com/wixtoolset/wix3/releases) on the `PATH`.
+### Building the Windows installer (`.msi`) locally
+
+**On Windows** (using `jpackage`):
+
+`./mvnw install` builds `target/dist/ConnLab-<version>.msi` with `jpackage`, which requires [WiX Toolset v3](https://github.com/wixtoolset/wix3/releases) (`candle.exe` and `light.exe`) on the `PATH`. You can download the portable binaries and build from PowerShell with:
+
+```powershell
+# One-time setup: download WiX 3.14 portable binaries and add them to your user PATH
+Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip" -OutFile "$env:TEMP\wix314.zip"
+Expand-Archive -Path "$env:TEMP\wix314.zip" -DestinationPath "$HOME\.wix314" -Force
+$env:PATH += ";$HOME\.wix314"
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";$HOME\.wix314", "User")
+
+# Build the MSI in target\dist\ConnLab-<version>.msi
+.\mvnw.cmd clean install -DskipTests
+```
+
+**On Linux / WSL** (using the CI script):
+
+```bash
+# Needs curl, jq, tar, unzip, wixl (msitools) and node/npm on the PATH
+.github/release/build-msi.sh
+```
 
 ## CI and releases
 
 | Workflow | When | Runner |
 |---|---|---|
 | `bump-patch.yml` | Pull requests and pushes to `dev`: tests and Qodana. On `dev` it then bumps the patch version. | Self-hosted Linux (`connlab`) |
-| `release.yml` | Pushes to `main`: builds the MSI and publishes the release `v<version>` with it, unless it exists. | Self-hosted Windows (`windows`, `connlab`) |
+| `release.yml` | Pushes to `main`: builds the MSI and publishes the release `v<version>` with it, unless it exists. | Self-hosted Linux (`connlab`) |
 
 Work goes into feature branches with a pull request to `dev`. A release is made by merging `dev` into `main`.
