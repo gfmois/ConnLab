@@ -151,3 +151,9 @@ cd .github/runner
 read -rs RUNNER_TOKEN && export RUNNER_TOKEN   # registration token from GitHub (needed only the first time)
 docker compose up -d --build
 ```
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE) (`GPL-3.0-or-later`).
+Any modifications or derivative works distributed must be licensed under the same terms, and contributions are welcome via Pull Request.
+
